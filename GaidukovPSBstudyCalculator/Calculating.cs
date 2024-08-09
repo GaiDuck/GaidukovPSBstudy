@@ -6,46 +6,82 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
-    internal class Calculating
+    internal class Calculating //Класс такого рода - стиль функционального программирования, переименовать в название для объекта, к примеру: Calculator
     {
         public double TempResult { get; private set; }
+        
+        //Здесь должен быть конструктор хотя бы пустой
 
+        /// <summary>
+        /// Переименовать в метод типа Calculator.Add(...), по принципу Объект.Действие(...), сигнатуру можно оставить ту же.
+        /// Подумать, точно ли здесь должен бытиь вообще TempResult? Если это из-за того, что он нужен где-то в другом методе с использованием этого метода, 
+        /// то лучше уж там сделать TempResult = Add(...), а здесь оставить return firNumber + secondNumber
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <returns></returns>
         double CalculateAddiction(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber + secondNumber;
             return TempResult;
         }
-
+        /// <summary>
+        /// Аналогично CalculateAddiction
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <returns></returns>
         double CalculateSubtraction(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber - secondNumber;
             return TempResult;
         }
 
+        /// <summary>
+        /// Аналогично CalculateAddiction
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <returns></returns>
         double CalculateMultiplication(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber * secondNumber;
             return TempResult;
         }
 
+        /// <summary>
+        /// Аналогично CalculateAddiction
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <returns></returns>
         double CalculateDivision(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber / secondNumber;
             return TempResult;
         }
 
+        /// <summary>
+        /// Аналогично CalculateAddiction
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <returns></returns>
         double CalculatePower(double firstNumber, double secondNumber)
         {
             TempResult = Math.Pow(firstNumber, secondNumber);
             return TempResult;
         }
-
+        //Best: написать краткое саммари для всех методов выше, заменив комментарии ментора
         void PublicLogs(double firstNumber, double secondNumber, char mathOperator, double tempResult, string status)
         {
             if (status == "Ok")
                 Console.WriteLine($"{firstNumber} {mathOperator} {secondNumber} = {tempResult}");
             else
             {
+                //Исправить: всю логику со статусом перенести в метод Validate 
+                //Саму переменную статуса либо убрать, либо заменить на enum вместо строки, если он ТОЧНО нужен (рекомендую подумать сначала, нужен ли)
+                //Если хочется менять цвета, то к ILogger интерфейсу можно добавить метод LogError и логику логирования ошибки сделать там, а здесь только звать ILogger.LogError(...)
                 switch (status)
                 {
                     case "деление на ноль":
@@ -65,6 +101,8 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        //Переименовать в Validate или ValidateOperation
+        //OperationIsValid - критерий, подходящий состоянию, скорее название для свойства, чем для метода
         string OperationIsValid(double firstNumber, double secondNumber, char mathOperator)
         {
             if (mathOperator == '/' && secondNumber == 0)
@@ -86,6 +124,11 @@ namespace GaidukovPSBstudyCalculator
             switch (mathOperator)
             {
                 case '+':
+                    //Исправить: Убрать эту матрешку, должно быть (пример):
+                    //ValidateOperation(...); - за пределами свича, а не дубль в каждом варианте свича
+                    //CalculateAddiction(...), или другой нужный метод
+                    //Всё логирование отдать экземпляру ILogger и перенести в эти методы, PublicLogs упразднить совсем!
+                    
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
                         CalculateAddiction(firstNumber, secondNumber),
                         OperationIsValid(firstNumber, secondNumber, mathOperator));
