@@ -1,6 +1,6 @@
 ﻿using GaidukovPSBstudyCalculator;
 
-Calculating calc = new Calculating();
+Calculator calc = new Calculator();
 InputData input = new InputData();
 
 AdditionalFunctions.Greeting();
@@ -25,7 +25,7 @@ do
                 break;
 
             case 2:  //калькулятор, считающий из строки
-                input.StringInput();
+                input.GetUsersInput();
                 do
                 {
                     input.GetBrackets();
@@ -52,7 +52,7 @@ while (!modeIsCorrect);
 
 void CalculatingStepByStep()  //калькулятор с пошаговым рассчестом
 {
-    input.StringInput();
+    input.GetUsersInput();
     input.GetDataV1();
     calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
 }
