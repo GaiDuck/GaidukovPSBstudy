@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
+    public enum Message
+    {
+        "Введите первое число:",
+        "Введите второе число:"
+    }
     internal class Running
     {
         public Calculator calc = new Calculator();
@@ -15,7 +20,7 @@ namespace GaidukovPSBstudyCalculator
         public void CalculatingStepByStep()  //калькулятор с пошаговым рассчестом
         {
             input.GetUsersInput();
-            input.GetDataV1();
+            input.GetPartOfMathExpression(Message);
             calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
         }
 

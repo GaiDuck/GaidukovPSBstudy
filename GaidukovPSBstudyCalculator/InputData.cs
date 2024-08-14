@@ -35,7 +35,8 @@ namespace GaidukovPSBstudyCalculator
         }
 
         //калькулятор с вводом по действиям
-        double GetNumber() //метод, парясящий вводимое пользователем число из строки в числовое значение
+
+        double GetPartOfMathExpression() //метод, парясящий вводимое пользователем число из строки в числовое значение
         {
             bool parsed;
 
@@ -55,48 +56,48 @@ namespace GaidukovPSBstudyCalculator
         //Исправить: на метод выше сделать перегрузку GetNumber(string message), который объединит логику GetFirstNumber и GetSecondNumber, сами они станут:
         //GetFirstNumber() => GetNumber("Введите первое число: "); Ну и GetSecondNumber по аналогии
         //Console.Write нужно заменить на... (предлагаю догадаться самому)
-        void GetFirstNumber() //метод, записывающий первое число в свойство
+
+        public void GetPartOfMathExpression(string message) //метод, записывающий первое число в свойство
         {
-            Console.Write("Введите первое число: ");
-            FirstNumber = GetNumber();
-        }
-
-        void GetSecondNumber() //метод, записывающий второе число в свойство
-        {
-            Console.Write("Введите второе число: ");
-            SecondNumber = GetNumber();
-        }
-
-        void GetMathOperator() //метод, записывающий математический оператор в свойство
-        {
-            Console.Write("Введите символ операции: ");
-
-            bool mathOperatorFound = false;
-
-            do
+            Console.Write($"{message}");
+            switch(message)
             {
-                bool parsed = char.TryParse(Console.ReadLine(), out var input);
+                case "Введите первое число: ":
 
-                if (parsed)
-                {
-                    if(mathOperators.Contains(input))
+                    FirstNumber = GetPartOfMathExpression(); 
+
+                break;
+
+                case "Введите второе число: ":
+
+                    SecondNumber = GetPartOfMathExpression();
+
+                break;
+
+                case "Введите символ операции: ":
+
+                    bool mathOperatorFound = false;
+
+                    do
                     {
-                        MathOperator = input;
-                        mathOperatorFound = true;
+                        bool parsed = char.TryParse(Console.ReadLine(), out var input);
+
+                        if (parsed)
+                        {
+                            if (mathOperators.Contains(input))
+                            {
+                                MathOperator = input;
+                                mathOperatorFound = true;
+                            }
+                        }
+
+                        if (!(mathOperatorFound && parsed))
+                            AdditionalFunctions.EnterIncorrectData();
                     }
-                }
+                    while (!mathOperatorFound);
 
-                if (!(mathOperatorFound && parsed))
-                    AdditionalFunctions.EnterIncorrectData();
-            }
-            while (!mathOperatorFound);
-        }
-
-        public void GetDataV1() //комплекс методов, получающих два числа и математический оператор
-        {
-            GetFirstNumber();
-            GetMathOperator();
-            GetSecondNumber();
+                break;
+            };
         }
 
         //калькулятор с вводом строкой
