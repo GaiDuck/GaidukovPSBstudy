@@ -12,13 +12,20 @@ namespace GaidukovPSBstudyCalculator
         public double SecondNumber { get; private set; }
         public char MathOperator { get; private set; }
 
-        private static char[] mathOperators = { '+', '-', '*', '/', '^', '(', ')' }; //при попытке сделать const выбрасывает две ошибки
+        private static char[] mathOperators = { '+', '-', '*', '/', '^', '(', ')' }; 
+        
+        public int MathOperatorCount { get; private set; }  //Тут не нужен set, проще отдать свойство _operators.Count в get
+        public int OpenBracketIndex { get; private set; }
+        public int CloseBracketIndex { get; private set; }
+        public bool BracketIsFound { get; private set; } //Можно тоже без set
+        public double BracketResult { get; private set; }
 
         List<string> _splitedInput;
         List<double> _numbers;
         List<char> _operators;
         List<string> _bracket;
 
+        //Вот сюда конструктор
         public InputData()
         {
             _splitedInput = new List<string>();
@@ -27,14 +34,7 @@ namespace GaidukovPSBstudyCalculator
             _bracket = new List<string>();
         }
 
-        public int MathOperatorCount { get; private set; }  
-        public int OpenBracketIndex { get; private set; }
-        public int CloseBracketIndex { get; private set; }
-        public bool BracketIsFound { get; private set; }
-        public double BracketResult { get; private set; }
-
         //калькулятор с вводом по действиям
-
         double GetNumber() //метод, парясящий вводимое пользователем число из строки в числовое значение
         {
             bool parsed;
@@ -49,10 +49,12 @@ namespace GaidukovPSBstudyCalculator
                     AdditionalFunctions.EnterIncorrectData();
             }
             while (!parsed); //будет запрашивать ввод числа пока пользователь не введет корректное значение
-
-            return 0;
+            
+            return 0; //Сударь, вы из C++ сбежали или из JS? Здесь нужно Exception бросить, потому что логика программы не подразумевает, что попасть сюда возможно
         }
-
+        //Исправить: на метод выше сделать перегрузку GetNumber(string message), который объединит логику GetFirstNumber и GetSecondNumber, сами они станут:
+        //GetFirstNumber() => GetNumber("Введите первое число: "); Ну и GetSecondNumber по аналогии
+        //Console.Write нужно заменить на... (предлагаю догадаться самому)
         void GetFirstNumber() //метод, записывающий первое число в свойство
         {
             Console.Write("Введите первое число: ");
@@ -99,7 +101,9 @@ namespace GaidukovPSBstudyCalculator
 
         //калькулятор с вводом строкой
 
-        public void StringInput() //принимает на вход строку и записывает ее по частям в массив строк
+        //Исправить: Переименовать, чтобы любой человек по названию метода мог определить, что здесь происходит
+        //Существуют практики наименования методов и свойств, гугл в помощь
+        public void GetUsersInput() //принимает на вход строку и записывает ее по частям в массив строк
         {
             Console.Write("Введите математическое выражение одной строкой, разделяя все числа и математические операции " +
                           "пробелами. Используйте запятую для записи чисел с дробной частью.  \n\n");
@@ -119,6 +123,9 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        //Совет: настоятельно рекомендую разделить логику получения значений и логику парсинга строки.
+        //Текущая реализация мешает переиспользовать парсинг в другом классе при наследовании,
+        //а также нарушает принцип Single Responsibility (паттерн S из принципов SOLID)
         bool SeachForBrackets()
         {
             bool bracketsAreFound = false;
@@ -212,7 +219,7 @@ namespace GaidukovPSBstudyCalculator
         {
             OpenBracketIndex = 0;
             CloseBracketIndex = 0;
-                CompliteBracketList(
+                CompliteBracketList( 
                     SeachForBrackets());
 
             CompliteLists(_bracket);
