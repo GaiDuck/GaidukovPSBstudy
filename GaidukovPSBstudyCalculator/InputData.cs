@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
@@ -11,8 +12,13 @@ namespace GaidukovPSBstudyCalculator
         public double FirstNumber { get; private set; }
         public double SecondNumber { get; private set; }
         public char MathOperator { get; private set; }
+        public int MathOperatorCount { get; private set; }  //Тут не нужен set, проще отдать свойство _operators.Count в get
+        public int OpenBracketIndex { get; private set; }
+        public int CloseBracketIndex { get; private set; }
+        public bool BracketIsFound { get; private set; } //Можно тоже без set
+        public double BracketResult { get; private set; }
 
-        private static char[] mathOperators = { '+', '-', '*', '/', '^', '(', ')' }; //при попытке сделать const выбрасывает две ошибки
+        private static char[] mathOperators = { '+', '-', '*', '/', '^', '(', ')' }; 
 
         List<string> _splitedInput;
         List<double> _numbers;
@@ -27,15 +33,30 @@ namespace GaidukovPSBstudyCalculator
             _bracket = new List<string>();
         }
 
-        public int MathOperatorCount { get; private set; }  //Тут не нужен set, проще отдать свойство _operators.Count в get
-        public int OpenBracketIndex { get; private set; }
-        public int CloseBracketIndex { get; private set; }
-        public bool BracketIsFound { get; private set; } //Можно тоже без set
-        public double BracketResult { get; private set; }
-        //Вот сюда конструктор
 
-        //калькулятор с вводом по действиям
-        double GetNumber() //метод, парясящий вводимое пользователем число из строки в числовое значение
+        //калькулятор с вводом по действиям 
+        public void GetPartOfMathExpression(string message) 
+        {
+            Console.Write(message);
+            switch (message)
+            {
+                case "Введите первое число: ":
+                    FirstNumber = GetPartOfMathExpression();
+                break;
+                
+                case "Введите второе число: ":
+                    SecondNumber = GetPartOfMathExpression();
+                break;
+
+                case "Введите символ операции: ":
+                    GetMathOperator();
+                break;
+
+                default: break;
+            }
+        }
+
+        double GetPartOfMathExpression()
         {
             bool parsed;
 
@@ -48,29 +69,13 @@ namespace GaidukovPSBstudyCalculator
                 else
                     AdditionalFunctions.EnterIncorrectData();
             }
-            while (!parsed); //будет запрашивать ввод числа пока пользователь не введет корректное значение
+            while (!parsed);
 
             return 0; //Сударь, вы из C++ сбежали или из JS? Здесь нужно Exception бросить, потому что логика программы не подразумевает, что попасть сюда возможно
-        }
-        //Исправить: на метод выше сделать перегрузку GetNumber(string message), который объединит логику GetFirstNumber и GetSecondNumber, сами они станут:
-        //GetFirstNumber() => GetNumber("Введите первое число: "); Ну и GetSecondNumber по аналогии
-        //Console.Write нужно заменить на... (предлагаю догадаться самому)
-        void GetFirstNumber() //метод, записывающий первое число в свойство
-        {
-            Console.Write("Введите первое число: ");
-            FirstNumber = GetNumber();
-        }
-
-        void GetSecondNumber() //метод, записывающий второе число в свойство
-        {
-            Console.Write("Введите второе число: ");
-            SecondNumber = GetNumber();
         }
 
         void GetMathOperator() //метод, записывающий математический оператор в свойство
         {
-            Console.Write("Введите символ операции: ");
-
             bool mathOperatorFound = false;
 
             do
@@ -92,24 +97,23 @@ namespace GaidukovPSBstudyCalculator
             while (!mathOperatorFound);
         }
 
-        public void GetDataV1() //комплекс методов, получающих два числа и математический оператор
-        {
-            GetFirstNumber();
-            GetMathOperator();
-            GetSecondNumber();
-        }
-
         //калькулятор с вводом строкой
 
         //Исправить: Переименовать, чтобы любой человек по названию метода мог определить, что здесь происходит
         //Существуют практики наименования методов и свойств, гугл в помощь
-        public void StringInput() //принимает на вход строку и записывает ее по частям в массив строк
+        public void GettingUsersString() 
         {
             Console.Write("Введите математическое выражение одной строкой, разделяя все числа и математические операции " +
                           "пробелами. Используйте запятую для записи чисел с дробной частью.  \n\n");
 
             try
             {
+                /*                
+                string pattern = @"(-)|(\/)|\(";
+                string input = Console.ReadLine();
+                Regex.Split(input, pattern);
+                */
+
                 string[] input = Console.ReadLine().Split(' ');
 
                 foreach (string s in input)
@@ -176,16 +180,16 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
-        void CompliteLists(List<string> splitedInput)
+        void CompliteLists(List<string> splitedList)
         {
-            for(int i = 0; i < splitedInput.Count; i++)
+            for(int i = 0; i < splitedList.Count; i++)
             {
-                bool parced = double.TryParse(splitedInput[i], out var result);
+                bool parced = double.TryParse(splitedList[i], out var result);
 
                 if (parced)
                     _numbers.Add(result);
                 else
-                    _operators.Add(Convert.ToChar(splitedInput[i]));
+                    _operators.Add(Convert.ToChar(splitedList[i]));
             }
             MathOperatorCount = _operators.Count;
         }

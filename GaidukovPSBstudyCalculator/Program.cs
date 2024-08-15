@@ -1,111 +1,47 @@
 ﻿using GaidukovPSBstudyCalculator;
-//Исправить: вынести за пределы Program.Main() - более подробное описание того, как это работает, в  исправлениях ниже
-Calculating calc = new Calculating();
-InputData input = new InputData();
 
-//Точка входа здесь должна начинаться
-AdditionalFunctions.Greeting();
-
-bool modeIsCorrect;
-
-do
+internal class Program
 {
-    Console.WriteLine("1 - пошаговый, 2 - строкой");
-
-    modeIsCorrect = false;
-
-    bool parsed = byte.TryParse(Console.ReadLine(), out var mode);
-
-    if (parsed)
+    private static void Main(string[] args)
     {
-        switch (mode)
-        {
-            case 1:
-                CalculatingStepByStep();
-                modeIsCorrect = true;
-                break;
+        AdditionalFunctions.Greeting();
+        MainFunctoins main = new MainFunctoins();
 
-            case 2:  //калькулятор, считающий из строки
-                input.StringInput();
-                do
+        bool modeIsCorrect;
+
+        do
+        {
+            Console.WriteLine("1 - пошаговый, 2 - строкой");
+
+            modeIsCorrect = false;
+
+            bool parsed = char.TryParse(Console.ReadLine(), out var mode);
+
+            if (parsed)
+            {
+                switch (mode)
                 {
-                    input.GetBrackets();
-                    CalculatingByString();
-                    input.SplitedInputRemoveBracket(calc.TempResult, input.BracketIsFound);
-                    if (input.MathOperatorCount == 0)
+                    case '1':
+                        main.CalculatingStepByStep();
+                        modeIsCorrect = true;
                         break;
-                    input.SetBracketIndexes();
-                } while (input.BracketIsFound); // не хватает перезаписи значения скобок
 
-                input.SetExpressionAfterOpenBrackets();
-                CalculatingByString();
+                    case '2':  //калькулятор, считающий из строки
+                        main.CalculatingByString();
+                        modeIsCorrect = true;
+                        break;
 
-                modeIsCorrect = true;
-                break;
-
-            default:
-                Console.WriteLine("Эта функция находится в разработке, попробуйте воспользоваться другой функцией.");
-                break;
-        }  
+                    default:
+                        Console.WriteLine("Эта функция находится в разработке, попробуйте воспользоваться другой функцией.");
+                        break;
+                }
+            }
+            else
+                AdditionalFunctions.EnterIncorrectData();
+        }
+        while (!modeIsCorrect);
     }
 }
-while (!modeIsCorrect);
 
-//Исправить:
-//В данный момент все методы ниже - это вложенные методы в метод static void Main() - точку входа в приложение
-//Программно это работает, но нарушает логику парадигмы ООП, поскольку являет собой чисто функциональное программирование
-//Вариант 1: Преобразовать данный класс в классический стиль: alt+enter --> Преобразовать программу в стиле Program.Main()
-//Вариант 2: Перенести эти методы в отдельный класс
-void CalculatingStepByStep()  //калькулятор с пошаговым рассчестом
-{
-    input.StringInput();
-    input.GetDataV1();
-    calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
-}
-
-void CalculatingFromString(int i)
-{ 
-    calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
-    input.UpdateExpression(calc.TempResult, i); 
-}
-
-void CalculatingByString()      //Приоритеты выполнения операций:
-{                               //Возведение в степень -> Умножение и деление -> Сложение и вычитание
-    int i = input.MathOperatorCount;
-
-
-    for (int a = i - 1; a >= 0; a--) //цикл для вычисления степеней
-    {
-        input.SetNumbersByMathoperator(a);
-        if (input.MathOperator == '^')
-        {
-            CalculatingFromString(a);
-            i--;
-        }
-    }
-
-    for (int b = i - 1; b >= 0; b--) //цикл для вычисления умножений и делений
-    {
-        input.SetNumbersByMathoperator(b);
-        if (input.MathOperator == '*' || input.MathOperator == '/')
-        {
-            CalculatingFromString(b);
-            i--;
-        }
-    }
-
-    for (int c = 0; c < i;) //цикл для вычисления сложений и вычитаний
-    {
-        input.SetNumbersByMathoperator(c);
-
-        if (input.MathOperator == '+' || input.MathOperator == '-')
-        {
-            CalculatingFromString(c);
-            i--;
-        }
-        else
-            c++;
-    } 
-}
 
 

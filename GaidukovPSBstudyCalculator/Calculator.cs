@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
-    internal class Calculating //Класс такого рода - стиль функционального программирования, переименовать в название для объекта, к примеру: Calculator
+    internal class Calculator
     {
         public double TempResult { get; private set; }
         
         //Здесь должен быть конструктор хотя бы пустой
+        public Calculator()
+        {
+
+        }
 
         /// <summary>
         /// Переименовать в метод типа Calculator.Add(...), по принципу Объект.Действие(...), сигнатуру можно оставить ту же.
@@ -20,7 +24,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
         /// <returns></returns>
-        double CalculateAddiction(double firstNumber, double secondNumber)
+        double Add(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber + secondNumber;
             return TempResult;
@@ -31,7 +35,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
         /// <returns></returns>
-        double CalculateSubtraction(double firstNumber, double secondNumber)
+        double Sub(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber - secondNumber;
             return TempResult;
@@ -43,7 +47,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
         /// <returns></returns>
-        double CalculateMultiplication(double firstNumber, double secondNumber)
+        double Mult(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber * secondNumber;
             return TempResult;
@@ -55,7 +59,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
         /// <returns></returns>
-        double CalculateDivision(double firstNumber, double secondNumber)
+        double Div(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber / secondNumber;
             return TempResult;
@@ -67,7 +71,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
         /// <returns></returns>
-        double CalculatePower(double firstNumber, double secondNumber)
+        double Pow(double firstNumber, double secondNumber)
         {
             TempResult = Math.Pow(firstNumber, secondNumber);
             return TempResult;
@@ -101,9 +105,7 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
-        //Переименовать в Validate или ValidateOperation
-        //OperationIsValid - критерий, подходящий состоянию, скорее название для свойства, чем для метода
-        string OperationIsValid(double firstNumber, double secondNumber, char mathOperator)
+        string Validate(double firstNumber, double secondNumber, char mathOperator)
         {
             if (mathOperator == '/' && secondNumber == 0)
             {
@@ -130,32 +132,32 @@ namespace GaidukovPSBstudyCalculator
                     //Всё логирование отдать экземпляру ILogger и перенести в эти методы, PublicLogs упразднить совсем!
                     
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        CalculateAddiction(firstNumber, secondNumber),
-                        OperationIsValid(firstNumber, secondNumber, mathOperator));
+                        Add(firstNumber, secondNumber),
+                        Validate(firstNumber, secondNumber, mathOperator));
                     break;
 
                 case '-':
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        CalculateSubtraction(firstNumber, secondNumber),
-                        OperationIsValid(firstNumber, secondNumber, mathOperator));
+                        Sub(firstNumber, secondNumber),
+                        Validate(firstNumber, secondNumber, mathOperator));
                     break;
 
                 case '*':
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        CalculateMultiplication(firstNumber, secondNumber),
-                        OperationIsValid(firstNumber, secondNumber, mathOperator));
+                        Mult(firstNumber, secondNumber),
+                        Validate(firstNumber, secondNumber, mathOperator));
                     break;
 
                 case '/':
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        CalculateDivision(firstNumber, secondNumber), 
-                        OperationIsValid(firstNumber, secondNumber, mathOperator));
+                        Div(firstNumber, secondNumber), 
+                        Validate(firstNumber, secondNumber, mathOperator));
                     break;
 
                 case '^':
                     PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        CalculatePower(firstNumber, secondNumber),
-                        OperationIsValid(firstNumber, secondNumber, mathOperator));
+                        Pow(firstNumber, secondNumber),
+                        Validate(firstNumber, secondNumber, mathOperator));
                     break;
 
                 default:
