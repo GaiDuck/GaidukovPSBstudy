@@ -114,10 +114,12 @@ namespace GaidukovPSBstudyCalculator
                 Regex.Split(input, pattern);
                 */
 
-                string[] input = Console.ReadLine().Split(' ');
+                string pattern = @"(/)|(-)|(\*)|(\+)|(\()|(\))";
+                string[] input = Regex.Split(Console.ReadLine(), pattern);
 
                 foreach (string s in input)
                 {
+                    //s.Split(' ');
                     _splitedInput.Add(s);
                 }
             }

@@ -77,94 +77,71 @@ namespace GaidukovPSBstudyCalculator
             return TempResult;
         }
         //Best: написать краткое саммари для всех методов выше, заменив комментарии ментора
-        void PublicLogs(double firstNumber, double secondNumber, char mathOperator, double tempResult, string status)
-        {
-            if (status == "Ok")
-                Console.WriteLine($"{firstNumber} {mathOperator} {secondNumber} = {tempResult}");
-            else
-            {
-                //Исправить: всю логику со статусом перенести в метод Validate 
-                //Саму переменную статуса либо убрать, либо заменить на enum вместо строки, если он ТОЧНО нужен (рекомендую подумать сначала, нужен ли)
-                //Если хочется менять цвета, то к ILogger интерфейсу можно добавить метод LogError и логику логирования ошибки сделать там, а здесь только звать ILogger.LogError(...)
-                switch (status)
-                {
-                    case "деление на ноль":
-                        ConsoleColor defaltColor1 = Console.ForegroundColor;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Обнаружено деление на ноль, операция не может быть выполнена.");
-                        Console.ForegroundColor = defaltColor1;
-                        break;
 
-                    case "корень из отрицательного числа":
-                        ConsoleColor defaltColor2 = Console.ForegroundColor;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Обнаружено взятие корняя из отрицательного числа, операция не может быть выполнена.");
-                        Console.ForegroundColor = defaltColor2;
-                        break;
-                };
+        public void Calculate(char mathOperator, double firstNumber, double secondNumber)
+        {
+            if (Validate(firstNumber, secondNumber, mathOperator))
+            {
+                switch (mathOperator)
+                {
+                    case '+':
+                        //Исправить: Убрать эту матрешку, должно быть (пример):
+                        //ValidateOperation(...); - за пределами свича, а не дубль в каждом варианте свича
+                        //CalculateAddiction(...), или другой нужный метод
+                        //Всё логирование отдать экземпляру ILogger и перенести в эти методы, PublicLogs упразднить совсем!
+
+                        Add(firstNumber, secondNumber);
+                    break;
+
+                    case '-':
+                        Sub(firstNumber, secondNumber);
+                    break;
+
+                    case '*':
+                        Mult(firstNumber, secondNumber);
+                    break;
+
+                    case '/':
+                        Div(firstNumber, secondNumber);
+                    break;
+
+                    case '^':
+                        Pow(firstNumber, secondNumber);
+                    break;
+
+                    default:
+                        AdditionalFunctions.EnterIncorrectData();
+                    break;
+                }
             }
+            ILogger();
+            //add.WaitForEnterButtonPush();
         }
 
-        string Validate(double firstNumber, double secondNumber, char mathOperator)
+        bool Validate(double firstNumber, double secondNumber, char mathOperator)
         {
+            bool valid = false;
+
             if (mathOperator == '/' && secondNumber == 0)
             {
                 AdditionalFunctions.EnterIncorrectData();
-                return "деление на ноль";
+                Console.WriteLine("Обнаружено деление на ноль, операция не может быть выполнена.");
             }
             else if (mathOperator == '^' && firstNumber < 0 && secondNumber > -1 && secondNumber < 1)
             {
                 AdditionalFunctions.EnterIncorrectData();
-                return "корень из отрицательного числа";
+                Console.WriteLine("Обнаружено взятие корняя из отрицательного числа, операция не может быть выполнена.");
             }
             else
-                return "Ok";
+            {
+                valid = true;
+            }
+            return valid;
         }
 
-        public void Calculate(char mathOperator, double firstNumber, double secondNumber)
+        void ILogger()
         {
-            switch (mathOperator)
-            {
-                case '+':
-                    //Исправить: Убрать эту матрешку, должно быть (пример):
-                    //ValidateOperation(...); - за пределами свича, а не дубль в каждом варианте свича
-                    //CalculateAddiction(...), или другой нужный метод
-                    //Всё логирование отдать экземпляру ILogger и перенести в эти методы, PublicLogs упразднить совсем!
-                    
-                    PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        Add(firstNumber, secondNumber),
-                        Validate(firstNumber, secondNumber, mathOperator));
-                    break;
 
-                case '-':
-                    PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        Sub(firstNumber, secondNumber),
-                        Validate(firstNumber, secondNumber, mathOperator));
-                    break;
-
-                case '*':
-                    PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        Mult(firstNumber, secondNumber),
-                        Validate(firstNumber, secondNumber, mathOperator));
-                    break;
-
-                case '/':
-                    PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        Div(firstNumber, secondNumber), 
-                        Validate(firstNumber, secondNumber, mathOperator));
-                    break;
-
-                case '^':
-                    PublicLogs(firstNumber, secondNumber, mathOperator, 
-                        Pow(firstNumber, secondNumber),
-                        Validate(firstNumber, secondNumber, mathOperator));
-                    break;
-
-                default:
-                    AdditionalFunctions.EnterIncorrectData();
-                    break;
-            }
-            //add.WaitForEnterButtonPush();
         }
     }
 }
