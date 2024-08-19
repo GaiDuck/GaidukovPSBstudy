@@ -20,7 +20,6 @@ namespace GaidukovPSBstudyCalculator
             Console.WriteLine("Нажмите Enter...");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             Console.WriteLine(" ");
-
         }
 
         public static void EnterIncorrectData()

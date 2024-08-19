@@ -216,8 +216,10 @@ namespace GaidukovPSBstudyCalculator
             {
                 _splitedInput[OpenBracketIndex] = Convert.ToString(tempResult);
                 _splitedInput.RemoveRange(OpenBracketIndex + 1, CloseBracketIndex - OpenBracketIndex);
-                foreach (var s in _splitedInput) { Console.Write(s + " "); }
-                Console.WriteLine(" ");
+/*                
+                foreach (var s in _splitedInput) { Console.Write(s); }
+                Console.WriteLine(" ");     
+*/          
             }
         }
 
