@@ -119,7 +119,7 @@ namespace GaidukovPSBstudyCalculator
 
                 foreach (string s in input)
                 {
-                    //s.Split(' ');
+                    s.Split(' ');
                     _splitedInput.Add(s);
                 }
             }
@@ -186,12 +186,13 @@ namespace GaidukovPSBstudyCalculator
         {
             for(int i = 0; i < splitedList.Count; i++)
             {
-                bool parced = double.TryParse(splitedList[i], out var result);
+                bool parcedNumber = double.TryParse(splitedList[i], out var number);
+                bool parcedMathOperator = char.TryParse(splitedList[i], out var mathOperator);
 
-                if (parced)
-                    _numbers.Add(result);
-                else
-                    _operators.Add(Convert.ToChar(splitedList[i]));
+                if (parcedNumber)
+                    _numbers.Add(number);
+                else if (parcedMathOperator && mathOperators.Contains(mathOperator))
+                    _operators.Add(mathOperator);
             }
             MathOperatorCount = _operators.Count;
         }

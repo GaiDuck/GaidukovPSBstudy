@@ -114,7 +114,7 @@ namespace GaidukovPSBstudyCalculator
                     break;
                 }
             }
-            ILogger();
+            Logger(mathOperator, firstNumber, secondNumber);
             //add.WaitForEnterButtonPush();
         }
 
@@ -139,9 +139,9 @@ namespace GaidukovPSBstudyCalculator
             return valid;
         }
 
-        void ILogger()
-        {
-
+        void Logger(char mathOperator, double firstNumber, double secondNumber)
+        {   
+            Console.WriteLine($"{Math.Round(firstNumber, 4)} {mathOperator} {Math.Round(secondNumber, 4)} = {Math.Round(TempResult, 4)}");
         }
     }
 }
