@@ -114,8 +114,10 @@ namespace GaidukovPSBstudyCalculator
                 Regex.Split(input, pattern);
                 */
 
-                string pattern = @"(/)|(-)|(\*)|(\+)|(\()|(\))";
-                string[] input = Regex.Split(Console.ReadLine(), pattern);
+                string pattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
+                string tempInput = Regex.Replace(Console.ReadLine(), "[A-Za-zА-Яа-я .!\"'@#№;$%:?&=`~<>]", "");
+                string[] input = Regex.Split(tempInput, pattern);
+                //Regex.Replace(Console.ReadLine(), "[^0-9.]", "")
 
                 foreach (string s in input)
                 {
@@ -131,7 +133,7 @@ namespace GaidukovPSBstudyCalculator
 
         //Совет: настоятельно рекомендую разделить логику получения значений и логику парсинга строки. Текущая реализация мешает переиспользовать парсинг в другом классе при наследовании,
         //а также нарушает принцип Single Responsibility (паттерн S из принципов SOLID)
-        bool SeachForBrackets()
+        bool SeachForBracketIndex()
         {
             bool bracketsAreFound = false;
             bool openBracketIsFound = false;
@@ -228,7 +230,7 @@ namespace GaidukovPSBstudyCalculator
             OpenBracketIndex = 0;
             CloseBracketIndex = 0;
                 CompliteBracketList( 
-                    SeachForBrackets());
+                    SeachForBracketIndex());
 
             CompliteLists(_bracket);
         }
