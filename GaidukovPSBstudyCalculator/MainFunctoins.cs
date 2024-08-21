@@ -43,22 +43,29 @@ namespace GaidukovPSBstudyCalculator
 
         public void CalculatingByString()
         {
-            input.GettingUsersString();
-            do
+            input.GettingSplitedUsersString(
+                input.SplittingUsersString(
+                    input.GettingUsersString()));
+            if (input.ValidateInput(input.splitedInput))
             {
-                input.GetBrackets();
+                do
+                {
+                    input.GetBrackets();
+                    CalculatingStringWithoutBrackets();
+                    input.SplitedInputRemoveBracket(calc.TempResult, input.BracketIsFound);
+
+                    if (input.MathOperatorCount == 0)
+                        break;
+
+                    input.SetBracketIndexes();
+                }
+                while (input.BracketIsFound);
+
+                input.SetExpressionAfterOpenBrackets();
                 CalculatingStringWithoutBrackets();
-                input.SplitedInputRemoveBracket(calc.TempResult, input.BracketIsFound);
-
-                if (input.MathOperatorCount == 0)
-                    break;
-
-                input.SetBracketIndexes();
-            } 
-            while (input.BracketIsFound);
-
-            input.SetExpressionAfterOpenBrackets();
-            CalculatingStringWithoutBrackets();
+            }
+            else
+                AdditionalFunctions.EnterIncorrectData();
         }
 
         public void CalculatingStringWithoutBrackets()      //Приоритеты выполнения операций:

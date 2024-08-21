@@ -20,14 +20,14 @@ namespace GaidukovPSBstudyCalculator
 
         private static char[] mathOperators = { '+', '-', '*', '/', '^', '(', ')' }; 
 
-        List<string> _splitedInput;
+        public List<string> splitedInput;
         List<double> _numbers;
         List<char> _operators;
         List<string> _bracket;
 
         public InputData()
         {
-            _splitedInput = new List<string>();
+            splitedInput = new List<string>();
             _numbers = new List<double>();
             _operators = new List<char>();
             _bracket = new List<string>();
@@ -74,7 +74,7 @@ namespace GaidukovPSBstudyCalculator
             return 0; //Сударь, вы из C++ сбежали или из JS? Здесь нужно Exception бросить, потому что логика программы не подразумевает, что попасть сюда возможно
         }
 
-        void GetMathOperator() //метод, записывающий математический оператор в свойство
+        void GetMathOperator() 
         {
             bool mathOperatorFound = false;
 
@@ -101,38 +101,36 @@ namespace GaidukovPSBstudyCalculator
 
         //Исправить: Переименовать, чтобы любой человек по названию метода мог определить, что здесь происходит
         //Существуют практики наименования методов и свойств, гугл в помощь
-        public void GettingUsersString() 
+
+        public string GettingUsersString()
         {
             Console.Write("Введите математическое выражение одной строкой, разделяя все числа и математические операции " +
                           "пробелами. Используйте запятую для записи чисел с дробной частью.  \n\n");
+            
+            string usersInput = Console.ReadLine();
 
-            try
+            return usersInput;
+        }
+
+        public string[] SplittingUsersString(string usersInput) 
+        {
+            string replacePattern = "[A-Za-zА-Яа-я .!\"\'@#№;$%:?&=`~<>]";
+            string splitPattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
+
+            string tempInput = Regex.Replace(usersInput, replacePattern, "");
+            string[] input = Regex.Split(tempInput, splitPattern);
+
+            return input;
+        }
+
+        public void GettingSplitedUsersString(string[] input)
+        {
+            foreach (string s in input)
             {
-                /*                
-                string pattern = @"(-)|(\/)|\(";
-                string input = Console.ReadLine();
-                Regex.Split(input, pattern);
-                */
-
-                string pattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
-                string tempInput = Regex.Replace(Console.ReadLine(), "[A-Za-zА-Яа-я .!\"'@#№;$%:?&=`~<>]", "");
-                string[] input = Regex.Split(tempInput, pattern);
-                //Regex.Replace(Console.ReadLine(), "[^0-9.]", "")
-
-                foreach (string s in input)
-                {
-                    s.Split(' ');
-                    _splitedInput.Add(s);
-                }
-            }
-            catch
-            {
-                _splitedInput.Add("0");
+                splitedInput.Add(s);
             }
         }
 
-        //Совет: настоятельно рекомендую разделить логику получения значений и логику парсинга строки. Текущая реализация мешает переиспользовать парсинг в другом классе при наследовании,
-        //а также нарушает принцип Single Responsibility (паттерн S из принципов SOLID)
         bool SeachForBracketIndex()
         {
             bool bracketsAreFound = false;
@@ -142,15 +140,15 @@ namespace GaidukovPSBstudyCalculator
             int openBracketIndex = 0;
             int closeBracketIndex = 0;
 
-            for (int i = 0; i < _splitedInput.Count; i++)
+            for (int i = 0; i < splitedInput.Count; i++)
             {
-                if (_splitedInput[i] == "(")
+                if (splitedInput[i] == "(")
                 {
                     openBracketIndex = i;
                     openBracketIsFound = true;
                 }
 
-                if (_splitedInput[i] == ")")
+                if (splitedInput[i] == ")")
                 {
                     closeBracketIndex = i;
                     closeBracketIsFound = true;
@@ -177,7 +175,7 @@ namespace GaidukovPSBstudyCalculator
             {
                 for (int i = OpenBracketIndex + 1; i < CloseBracketIndex; i++)
                 {
-                    _bracket.Add(_splitedInput[i]);
+                    _bracket.Add(splitedInput[i]);
                 }
 
                 BracketIsFound = true;
@@ -216,12 +214,12 @@ namespace GaidukovPSBstudyCalculator
         {
             if (bracketIsFound)
             {
-                _splitedInput[OpenBracketIndex] = Convert.ToString(tempResult);
-                _splitedInput.RemoveRange(OpenBracketIndex + 1, CloseBracketIndex - OpenBracketIndex);
-/*                
+                splitedInput[OpenBracketIndex] = Convert.ToString(tempResult);
+                splitedInput.RemoveRange(OpenBracketIndex + 1, CloseBracketIndex - OpenBracketIndex);
+/*
                 foreach (var s in _splitedInput) { Console.Write(s); }
-                Console.WriteLine(" ");     
-*/          
+                Console.WriteLine(" ");
+*/
             }
         }
 
@@ -246,7 +244,69 @@ namespace GaidukovPSBstudyCalculator
         {
             _numbers.Clear();
             _operators.Clear();
-            CompliteLists(_splitedInput);
+            CompliteLists(splitedInput);
+        }
+
+        int BracketsCout(List<string> input, string bracket)
+        {
+            int bracketCount = 0;
+
+            foreach (var s in input)
+            {
+                if (s == bracket)
+                    bracketCount++;
+            }
+            return bracketCount;
+        }
+
+        bool ValidateBrackets(int openBracketCount, int closeBracketCount)
+        {
+            if (openBracketCount == closeBracketCount)
+                return true;
+            else
+                return false;
+        }
+
+        int NumbersCount(List<string> input)
+        {
+            int numbersCount = 0;
+
+            foreach (var s in input)
+            {
+                if (double.TryParse(s, out var result))
+                    numbersCount++;
+            }
+            return numbersCount;
+        }
+
+        int MathOperatorsCount(List<string> input)
+        {
+            int mathOperatorsCount = 0;
+
+            foreach (var s in input)
+            {
+                bool parced = char.TryParse(s, out var result);
+                if (parced && mathOperators.Contains(result))
+                    mathOperatorsCount++;
+            }
+            return mathOperatorsCount;
+        }
+
+        bool ValidateMathOperators(int openBracketCount, int closeBracketCount, int numbersCount, int mathOperatorsCount)
+        {
+            if (numbersCount == mathOperatorsCount - openBracketCount - closeBracketCount + 1)
+                return true;
+            else 
+                return false;
+        }
+
+        public bool ValidateInput(List<string> input)
+        {
+            if (ValidateBrackets(BracketsCout(input, "("), BracketsCout(input, ")")) 
+                && ValidateMathOperators(BracketsCout(input, "("), BracketsCout(input, ")"), NumbersCount(input), MathOperatorsCount(input)))
+                return true;
+            else
+                return false;
         }
     }
 }

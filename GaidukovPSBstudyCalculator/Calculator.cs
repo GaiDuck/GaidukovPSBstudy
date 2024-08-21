@@ -10,7 +10,6 @@ namespace GaidukovPSBstudyCalculator
     {
         public double TempResult { get; private set; }
         
-        //Здесь должен быть конструктор хотя бы пустой
         public Calculator()
         {
 
@@ -85,10 +84,6 @@ namespace GaidukovPSBstudyCalculator
                 switch (mathOperator)
                 {
                     case '+':
-                        //Исправить: Убрать эту матрешку, должно быть (пример):
-                        //ValidateOperation(...); - за пределами свича, а не дубль в каждом варианте свича
-                        //CalculateAddiction(...), или другой нужный метод
-                        //Всё логирование отдать экземпляру ILogger и перенести в эти методы, PublicLogs упразднить совсем!
 
                         Add(firstNumber, secondNumber);
                     break;
@@ -115,7 +110,6 @@ namespace GaidukovPSBstudyCalculator
                 }
             }
             Logger(mathOperator, firstNumber, secondNumber);
-            //add.WaitForEnterButtonPush();
         }
 
         bool Validate(double firstNumber, double secondNumber, char mathOperator)
