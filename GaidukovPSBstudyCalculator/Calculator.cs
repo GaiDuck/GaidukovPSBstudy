@@ -30,8 +30,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns>FirstNumber + SecondNumber </returns>
         double Add(double firstNumber, double secondNumber)
         {
-            TempResult = firstNumber + secondNumber;
-            return TempResult;
+            return firstNumber + secondNumber;
         }
 
         /// <summary>
@@ -42,8 +41,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns>FirstNumber - SecondNumber </returns>
         double Sub(double firstNumber, double secondNumber)
         {
-            TempResult = firstNumber - secondNumber;
-            return TempResult;
+            return firstNumber - secondNumber;
         }
 
         /// <summary>
@@ -54,8 +52,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns>FirstNumber * SecondNumber </returns>
         double Mult(double firstNumber, double secondNumber)
         {
-            TempResult = firstNumber * secondNumber;
-            return TempResult;
+            return firstNumber * secondNumber;
         }
 
         /// <summary>
@@ -66,8 +63,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns>FirstNumber / SecondNumber </returns>
         double Div(double firstNumber, double secondNumber)
         {
-            TempResult = firstNumber / secondNumber;
-            return TempResult;
+            return firstNumber / secondNumber;
         }
 
         /// <summary>
@@ -78,8 +74,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns>FirstNumber ^ SecondNumber </returns>
         double Pow(double firstNumber, double secondNumber)
         {
-            TempResult = Math.Pow(firstNumber, secondNumber);
-            return TempResult;
+            return Math.Pow(firstNumber, secondNumber);
         }
 
         /// <summary>
@@ -96,23 +91,23 @@ namespace GaidukovPSBstudyCalculator
                 switch (mathOperator)
                 {
                     case '+':
-                        Add(firstNumber, secondNumber);
+                        TempResult = Add(firstNumber, secondNumber);
                     break;
 
                     case '-':
-                        Sub(firstNumber, secondNumber);
+                        TempResult = Sub(firstNumber, secondNumber);
                     break;
 
                     case '*':
-                        Mult(firstNumber, secondNumber);
+                        TempResult = Mult(firstNumber, secondNumber);
                     break;
 
                     case '/':
-                        Div(firstNumber, secondNumber);
+                        TempResult = Div(firstNumber, secondNumber);
                     break;
 
                     case '^':
-                        Pow(firstNumber, secondNumber);
+                        TempResult = Pow(firstNumber, secondNumber);
                     break;
 
                     default:
