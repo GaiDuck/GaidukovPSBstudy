@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
+    /// <summary>
+    /// Класс, выполняющий функции получения информации от пользователя, её первичной проверки и обработки.
+    /// </summary>
     internal class InputData
     {
         public double FirstNumber { get; private set; }
@@ -34,7 +37,10 @@ namespace GaidukovPSBstudyCalculator
         }
 
 
-        //калькулятор с вводом по действиям 
+        /// <summary>
+        /// Метод, последовательно вызывающий запись чисел и знака математической операции в пошаговом режиме работы калькулятора.
+        /// </summary>
+        /// <param name="message"></param>
         public void GetPartOfMathExpression(string message) 
         {
             Console.Write(message);
@@ -56,24 +62,34 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        /// <summary>
+        /// Метод, принимающий от пользователя строку и преобразующий её в число.
+        /// В случае ошибки метод перезапускается.
+        /// </summary>
         double GetPartOfMathExpression()
         {
             bool parsed;
+            double input;
 
-            do
+            while (true)
             {
-                parsed = double.TryParse(Console.ReadLine(), out var input);
+                parsed = double.TryParse(Console.ReadLine(), out var result);
 
                 if (parsed)
-                    return input;
+                {
+                    input = result;
+                    break;
+                }
                 else
                     AdditionalFunctions.EnterIncorrectData();
             }
-            while (!parsed);
-
-            return 0; //Сударь, вы из C++ сбежали или из JS? Здесь нужно Exception бросить, потому что логика программы не подразумевает, что попасть сюда возможно
+            return input;
         }
 
+        /// <summary>
+        /// Метод, принимающий от пользователя строку и преобразующий её в символ математической операции.
+        /// В случае ошибки метод перезапускается.
+        /// </summary>
         void GetMathOperator() 
         {
             bool mathOperatorFound = false;
@@ -99,30 +115,26 @@ namespace GaidukovPSBstudyCalculator
 
         //калькулятор с вводом строкой
 
-        //Исправить: Переименовать, чтобы любой человек по названию метода мог определить, что здесь происходит
-        //Существуют практики наименования методов и свойств, гугл в помощь
-
-        public string GettingUsersString()
-        {
-            Console.Write("Введите математическое выражение одной строкой, разделяя все числа и математические операции " +
-                          "пробелами. Используйте запятую для записи чисел с дробной частью.  \n\n");
-            
-            string usersInput = Console.ReadLine();
-
-            return usersInput;
-        }
-
-        public string[] SplittingUsersString(string usersInput) 
+        /// <summary>
+        /// Метод получает от пользователя математическое выражение одной строкой, 
+        /// удаляет оттуда лишние символы и разбивает строку на отдельные числа и математические операторы.
+        /// </summary>
+        /// <returns></returns>
+        public string[] SplittingUsersString() 
         {
             string replacePattern = "[A-Za-zА-Яа-я .!\"\'@#№;$%:?&=`~<>]";
             string splitPattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
 
-            string tempInput = Regex.Replace(usersInput, replacePattern, "");
+            string tempInput = Regex.Replace(Console.ReadLine(), replacePattern, "");
             string[] input = Regex.Split(tempInput, splitPattern);
 
             return input;
         }
 
+        /// <summary>
+        /// Метод записывает раздробленную строку в список строк.
+        /// </summary>
+        /// <returns></returns>
         public void GettingSplitedUsersString(string[] input)
         {
             foreach (string s in input)
@@ -131,6 +143,10 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        /// <summary>
+        /// Метод ищет и записывает индексы пары скобок, в которой отсутствуют другие скобки.
+        /// </summary>
+        /// <returns></returns>
         bool SeachForBracketIndex()
         {
             bool bracketsAreFound = false;
@@ -166,6 +182,10 @@ namespace GaidukovPSBstudyCalculator
             return bracketsAreFound;
         }
 
+        /// <summary>
+        /// Метод копирует часть изначальной строки, находившуюся между ранее найденными скобками.
+        /// </summary>
+        /// <param name="bracketsAreFound"></param>
         void CompliteBracketList(bool bracketsAreFound)
         {
             BracketIsFound = false;
@@ -182,6 +202,10 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        /// <summary>
+        /// Метод принимает заданный список из чисел и математических операторов, затем распределяет числа в один список, а математические операторы в другой.
+        /// </summary>
+        /// <param name="splitedList"></param>
         void CompliteLists(List<string> splitedList)
         {
             for(int i = 0; i < splitedList.Count; i++)
@@ -197,6 +221,12 @@ namespace GaidukovPSBstudyCalculator
             MathOperatorCount = _operators.Count;
         }
 
+        /// <summary>
+        /// Метод по заданному номеру математического оператора выбирает пару чисел из списка чисел 
+        /// и математический оператор из списка математических операторов, после чего записывает их 
+        /// в свойстра, которые могут быть считанны методами, выполняющими математические операции.
+        /// </summary>
+        /// <param name="mathOperatorNumber"></param>
         public void SetNumbersByMathoperator(int mathOperatorNumber)
         {
             FirstNumber = _numbers[mathOperatorNumber];
@@ -204,25 +234,38 @@ namespace GaidukovPSBstudyCalculator
             MathOperator = _operators[mathOperatorNumber];
         }
 
+        /// <summary>
+        /// Метод принимает промежуточный результат математической операции,
+        /// удаляет отработанные числа и математический оператор из соответствующих списков
+        /// и записывает промежуточный результат на мместо первого числа из пары.
+        /// </summary>
+        /// <param name="tempResult"></param>
+        /// <param name="mathOperatorNumber"></param>
         public void UpdateExpression(double tempResult, int mathOperatorNumber)
         {
             _numbers[mathOperatorNumber] = tempResult;
             _numbers.RemoveAt(mathOperatorNumber+1);
             _operators.RemoveAt(mathOperatorNumber);
         }
+
+        /// <summary>
+        /// Метод принимает результат вычисления содержимого скобок и заменяет в изначальном выражении скобку результатом ее вычисления.
+        /// </summary>
+        /// <param name="tempResult"></param>
+        /// <param name="bracketIsFound"></param>
         public void SplitedInputRemoveBracket(double tempResult, bool bracketIsFound)
         {
             if (bracketIsFound)
             {
                 splitedInput[OpenBracketIndex] = Convert.ToString(tempResult);
                 splitedInput.RemoveRange(OpenBracketIndex + 1, CloseBracketIndex - OpenBracketIndex);
-/*
-                foreach (var s in _splitedInput) { Console.Write(s); }
-                Console.WriteLine(" ");
-*/
             }
         }
 
+        /// <summary>
+        /// Метод последовательно вызывает несколько методов, которые находят наиболее глубоко вложенную пару скобок 
+        /// и разделяют ее содержимое на список чисел и список математических операторов. 
+        /// </summary>
         public void GetBrackets()
         {
             OpenBracketIndex = 0;
@@ -233,6 +276,9 @@ namespace GaidukovPSBstudyCalculator
             CompliteLists(_bracket);
         }
 
+        /// <summary>
+        /// Метод сбрасывает к изначальному состоянию вспомогательные свойства и списки, необходимые для вычисления содержимого скобок.
+        /// </summary>
         public void SetBracketIndexes()
         {
             OpenBracketIndex = 0;
@@ -240,6 +286,10 @@ namespace GaidukovPSBstudyCalculator
             _numbers.Clear();
         }
 
+        /// <summary>
+        /// Метод сбрасывает к изначальному состоянию вспомогательные списки и заново заполняет их числами и математическими операторами
+        /// из начального выражения, в котором все скобки заменены эквивалентными значениями.
+        /// </summary>
         public void SetExpressionAfterOpenBrackets()
         {
             _numbers.Clear();
@@ -247,6 +297,12 @@ namespace GaidukovPSBstudyCalculator
             CompliteLists(splitedInput);
         }
 
+        /// <summary>
+        /// Метод принимает выражение и символ, затем подсчитывает и возвращает количество заданных символов. 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="bracket"></param>
+        /// <returns></returns>
         int BracketsCout(List<string> input, string bracket)
         {
             int bracketCount = 0;
@@ -259,6 +315,12 @@ namespace GaidukovPSBstudyCalculator
             return bracketCount;
         }
 
+        /// <summary>
+        /// Метод проверяет соответствие количества открывающих скобок количеству закрывающих скобок.
+        /// </summary>
+        /// <param name="openBracketCount"></param>
+        /// <param name="closeBracketCount"></param>
+        /// <returns></returns>
         bool ValidateBrackets(int openBracketCount, int closeBracketCount)
         {
             if (openBracketCount == closeBracketCount)
@@ -267,6 +329,11 @@ namespace GaidukovPSBstudyCalculator
                 return false;
         }
 
+        /// <summary>
+        /// Метод подсчитывает количество чисел в математическом выражении.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         int NumbersCount(List<string> input)
         {
             int numbersCount = 0;
@@ -279,6 +346,11 @@ namespace GaidukovPSBstudyCalculator
             return numbersCount;
         }
 
+        /// <summary>
+        /// Метод подсчитывает количество математических операций.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         int MathOperatorsCount(List<string> input)
         {
             int mathOperatorsCount = 0;
@@ -292,6 +364,14 @@ namespace GaidukovPSBstudyCalculator
             return mathOperatorsCount;
         }
 
+        /// <summary>
+        /// Метод проверяет соответствие количества чисел количеству математических операций.
+        /// </summary>
+        /// <param name="openBracketCount"></param>
+        /// <param name="closeBracketCount"></param>
+        /// <param name="numbersCount"></param>
+        /// <param name="mathOperatorsCount"></param>
+        /// <returns></returns>
         bool ValidateMathOperators(int openBracketCount, int closeBracketCount, int numbersCount, int mathOperatorsCount)
         {
             if (numbersCount == mathOperatorsCount - openBracketCount - closeBracketCount + 1)
@@ -300,6 +380,12 @@ namespace GaidukovPSBstudyCalculator
                 return false;
         }
 
+        /// <summary>
+        /// Проверяет корректность вводимой пользователем строки, проверяя колличество скобок
+        /// и соответствие количества математических операций и чисел. 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public bool ValidateInput(List<string> input)
         {
             if (ValidateBrackets(BracketsCout(input, "("), BracketsCout(input, ")")) 

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
+    /// <summary>
+    /// Класс, исполняющий основные сценарии использования приложения
+    /// </summary>
     internal class MainFunctoins
     {
         Calculator calc = new Calculator();
@@ -33,6 +36,9 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
+        /// <summary>
+        /// Калькулятор с пошаговым рассчетом.
+        /// </summary>
         public void CalculatingStepByStep()  
         {
             input.GetPartOfMathExpression(message(CalculatorMod.GetFirstNumber));
@@ -41,11 +47,16 @@ namespace GaidukovPSBstudyCalculator
             calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
         }
 
+        /// <summary>
+        /// Калькуляятор, рассчитывающий выражение, записанное одной строкой.
+        /// </summary>
         public void CalculatingByString()
         {
+            AdditionalFunctions.StartingCalculateByStringMod();
+
             input.GettingSplitedUsersString(
-                input.SplittingUsersString(
-                    input.GettingUsersString()));
+                input.SplittingUsersString());
+
             if (input.ValidateInput(input.splitedInput))
             {
                 do
@@ -68,6 +79,9 @@ namespace GaidukovPSBstudyCalculator
                 AdditionalFunctions.EnterIncorrectData();
         }
 
+        /// <summary>
+        /// Метод рассчитывает выражение, не содержащее скобок, записанное в одну строку.
+        /// </summary>
         public void CalculatingStringWithoutBrackets()      //Приоритеты выполнения операций:
         {                                                   //Возведение в степень -> Умножение и деление -> Сложение и вычитание
             int i = input.MathOperatorCount;
@@ -106,10 +120,15 @@ namespace GaidukovPSBstudyCalculator
             }
         }
 
-        public void CalculatingPartOfString(int i)
+        /// <summary>
+        /// Метод, принимающий номер математического оператора, вызывает методы, 
+        /// обсчитывающие часть строки и заменяющие ее результатом вычисления.
+        /// </summary>
+        /// <param name="i"></param>
+        public void CalculatingPartOfString(int mathOperatorNumber)
         {
             calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
-            input.UpdateExpression(calc.TempResult, i);
+            input.UpdateExpression(calc.TempResult, mathOperatorNumber);
         }
     }
 }

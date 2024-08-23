@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {
+    /// <summary>
+    /// Класс для выполнения базовых математических операций, проверки корректности запрашиваемых пользователем математических операций и 
+    /// вывода в консоль промежуточных значений.
+    /// </summary>
     internal class Calculator
     {
+        /// <summary>
+        /// Промежуточный результат вычислений.
+        /// </summary>
         public double TempResult { get; private set; }
         
         public Calculator()
@@ -16,24 +23,23 @@ namespace GaidukovPSBstudyCalculator
         }
 
         /// <summary>
-        /// Переименовать в метод типа Calculator.Add(...), по принципу Объект.Действие(...), сигнатуру можно оставить ту же.
-        /// Подумать, точно ли здесь должен бытиь вообще TempResult? Если это из-за того, что он нужен где-то в другом методе с использованием этого метода, 
-        /// то лучше уж там сделать TempResult = Add(...), а здесь оставить return firNumber + secondNumber
+        /// Метод принимает два числа и возвращает их сумму.
         /// </summary>
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
-        /// <returns></returns>
+        /// <returns>FirstNumber + SecondNumber </returns>
         double Add(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber + secondNumber;
             return TempResult;
         }
+
         /// <summary>
-        /// Аналогично CalculateAddiction
+        /// Метод принимает два числа и возвращает их разность.
         /// </summary>
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
-        /// <returns></returns>
+        /// <returns>FirstNumber - SecondNumber </returns>
         double Sub(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber - secondNumber;
@@ -41,11 +47,11 @@ namespace GaidukovPSBstudyCalculator
         }
 
         /// <summary>
-        /// Аналогично CalculateAddiction
+        /// Метод принимает два числа и возвращает их произведение.
         /// </summary>
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
-        /// <returns></returns>
+        /// <returns>FirstNumber * SecondNumber </returns>
         double Mult(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber * secondNumber;
@@ -53,11 +59,11 @@ namespace GaidukovPSBstudyCalculator
         }
 
         /// <summary>
-        /// Аналогично CalculateAddiction
+        /// Метод принимает два числа и возвращает их частное.
         /// </summary>
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
-        /// <returns></returns>
+        /// <returns>FirstNumber / SecondNumber </returns>
         double Div(double firstNumber, double secondNumber)
         {
             TempResult = firstNumber / secondNumber;
@@ -65,18 +71,24 @@ namespace GaidukovPSBstudyCalculator
         }
 
         /// <summary>
-        /// Аналогично CalculateAddiction
+        /// Метод принимает два числа и возвращает число в степени.
         /// </summary>
         /// <param name="firstNumber"></param>
         /// <param name="secondNumber"></param>
-        /// <returns></returns>
+        /// <returns>FirstNumber ^ SecondNumber </returns>
         double Pow(double firstNumber, double secondNumber)
         {
             TempResult = Math.Pow(firstNumber, secondNumber);
             return TempResult;
         }
-        //Best: написать краткое саммари для всех методов выше, заменив комментарии ментора
 
+        /// <summary>
+        /// Метод принимает два числа и знак математического оператора. 
+        /// На основании полученных данных вызывает метод, который проверяет корректность операции, затем вызывает метод, выполняющий операцию.
+        /// </summary>
+        /// <param name="mathOperator"></param>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
         public void Calculate(char mathOperator, double firstNumber, double secondNumber)
         {
             if (Validate(firstNumber, secondNumber, mathOperator))
@@ -84,7 +96,6 @@ namespace GaidukovPSBstudyCalculator
                 switch (mathOperator)
                 {
                     case '+':
-
                         Add(firstNumber, secondNumber);
                     break;
 
@@ -112,6 +123,14 @@ namespace GaidukovPSBstudyCalculator
             Logger(mathOperator, firstNumber, secondNumber);
         }
 
+        /// <summary>
+        /// Метод, проверяющий корректность математической операции. 
+        /// Возвращает true, если операция может быть выполнена, возвращает false, если операция не может быть выполнена. 
+        /// </summary>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
+        /// <param name="mathOperator"></param>
+        /// <returns></returns>
         bool Validate(double firstNumber, double secondNumber, char mathOperator)
         {
             bool valid = false;
@@ -133,6 +152,12 @@ namespace GaidukovPSBstudyCalculator
             return valid;
         }
 
+        /// <summary>
+        /// Метод, выводящий в консоль математическую операцию и ее результат, округленный до 4 знаков после запятой.
+        /// </summary>
+        /// <param name="mathOperator"></param>
+        /// <param name="firstNumber"></param>
+        /// <param name="secondNumber"></param>
         void Logger(char mathOperator, double firstNumber, double secondNumber)
         {   
             Console.WriteLine($"{Math.Round(firstNumber, 4)} {mathOperator} {Math.Round(secondNumber, 4)} = {Math.Round(TempResult, 4)}");
