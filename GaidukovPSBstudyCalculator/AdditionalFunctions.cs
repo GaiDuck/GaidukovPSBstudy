@@ -21,13 +21,41 @@ namespace GaidukovPSBstudyCalculator
         }
 
         /// <summary>
-        /// Останавливает программу и ожидает, пока пользователь не нажмет клавишу Enter. 
+        /// Останавливает программу и ожидает, пока пользователь не нажмет клавишу Enter для продолжения или Escape для завершения. 
         /// </summary>
-        public static void WaitForEnterButtonPush()
+        public static bool Exit()
         {
-            Console.WriteLine("\nНажмите Enter...\n");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            bool exit;
+            ConsoleKey button;
+
+            while (true)
+            {
+                Console.WriteLine("\nНажмите Enter для перезапуска.\nНажмите Escape для завершения.");
+
+                button = Console.ReadKey().Key;
+
+                if (button == ConsoleKey.Escape)
+                {
+                    exit = true;
+                    break;
+                }
+                else if (Console.ReadKey().Key == ConsoleKey.Enter)
+                {
+                    exit = false;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Неизвестная команда, попробуйте снова.");
+                }
+            }
+
+            if (exit) 
+                return true;
+            else
+                return false;
         }
+        
 
         /// <summary>
         /// Выдает в консоль сообщение "Вы ввели не корректные данные.", выделенное красным цветом. 
@@ -52,7 +80,6 @@ namespace GaidukovPSBstudyCalculator
                               "\nУмножение: * " +
                               "\nДеление: / " +
                               "\nВозведение в степень: ^");
-            WaitForEnterButtonPush();
         }
 
         /// <summary>

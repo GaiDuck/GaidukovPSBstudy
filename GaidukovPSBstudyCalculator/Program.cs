@@ -39,7 +39,7 @@ internal class Program
             else
                 AdditionalFunctions.EnterIncorrectData();
         }
-        while (!modeIsCorrect);
+        while (!AdditionalFunctions.Exit());
     }
 }
 
