@@ -12,6 +12,8 @@ namespace GaidukovPSBstudyCalculator
     /// </summary>
     internal class InputData
     {
+        Random random = new Random();
+
         public double FirstNumber { get; private set; }
         public double SecondNumber { get; private set; }
         public char MathOperator { get; private set; }
@@ -43,7 +45,7 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="message"></param>
         public void GetPartOfMathExpression(string message) 
         {
-            Console.Write(message);
+            Console.WriteLine($"\n{message}");
             switch (message)
             {
                 case "Введите первое число: ":
@@ -120,15 +122,12 @@ namespace GaidukovPSBstudyCalculator
         /// удаляет оттуда лишние символы и разбивает строку на отдельные числа и математические операторы.
         /// </summary>
         /// <returns></returns>
-        public string[] SplittingUsersString() 
+        public string[] SplittingUsersString(string replacePattern, string splitPattern, string input) 
         {
-            string replacePattern = "[A-Za-zА-Яа-я .!\"\'@#№;$%:?&=`~<>]";
-            string splitPattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
+            string tempInput = Regex.Replace(input, replacePattern, "");
+            string[] inputString = Regex.Split(tempInput, splitPattern);
 
-            string tempInput = Regex.Replace(Console.ReadLine(), replacePattern, "");
-            string[] input = Regex.Split(tempInput, splitPattern);
-
-            return input;
+            return inputString;
         }
 
         /// <summary>
@@ -137,6 +136,7 @@ namespace GaidukovPSBstudyCalculator
         /// <returns></returns>
         public void GettingSplitedUsersString(string[] input)
         {
+            splitedInput.Clear();
             foreach (string s in input)
             {
                 splitedInput.Add(s);
@@ -393,6 +393,155 @@ namespace GaidukovPSBstudyCalculator
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Метод принимает от пользователя произвольный массив чисел, удаляет из него все символы, кроме цифр, запятых и пробелов.
+        /// </summary>
+        public void GetUsersArray()
+        {
+            Console.WriteLine("\nВведите последовательность целых чисел, разделяя их пробелами.");
+
+            splitedInput.Clear();
+
+            GettingSplitedUsersString(
+                SplittingUsersString("[A-Za-zА-Яа-я.!\"\'@#№;$%:?&=`~<>\\/+*^()]", " ", Console.ReadLine()));
+        }
+
+        /// <summary>
+        /// Метод очищает splitedInput и наполняет его случайными числами на основании выбранного мода и количества чисел.
+        /// </summary>
+        public void GetRandomArray()
+        {
+            splitedInput.Clear();
+
+            Console.WriteLine("Выбран режим случайной генерации чисел.");
+
+            RandomMod mod = RandomizerMod();
+
+            int arrayLength = ChooseLengthOfRandomizedArray();
+
+
+            for (int i = 0; i < arrayLength; i++)
+            {
+                splitedInput.Add(Convert.ToString(RandomNumber(mod)));
+            }
+
+            //splitedInput.Add(Convert.ToString());
+
+            Console.WriteLine("Сгенерирован массив случайных чисел.");
+
+        }
+
+        /// <summary>
+        /// Предлагает пользователю выбрать режим генерации случайных чисел и 
+        /// </summary>
+        /// <param name="length"></param>
+        RandomMod RandomizerMod()
+        {
+            RandomMod randomazerMod = new RandomMod();
+
+            Console.WriteLine("Выберите режим генерации чисел.\n" +
+                              "1 - Все числа;\n" +
+                              "2 - Только положительные;\n" +
+                              "3 - Только отрицательные;\n" +
+                              "4 - Только четные;\n" +
+                              "5 - Только нечетные.\n");
+
+            switch (Console.ReadKey().Key)
+            {
+                case ConsoleKey.D1:
+                    randomazerMod = RandomMod.AllNumbers;
+                break;
+                    
+                case ConsoleKey.D2:
+                    randomazerMod = RandomMod.PositiveNumbers;
+                break; 
+
+                case ConsoleKey.D3:
+                    randomazerMod = RandomMod.NegativeNumbers;
+                break; 
+
+                case ConsoleKey.D4:
+                    randomazerMod = RandomMod.EvenNumber;
+                break; 
+
+                case ConsoleKey.D5:
+                    randomazerMod = RandomMod.OddNumber;
+                break;  
+            }
+
+            return randomazerMod;
+        }
+
+        /// <summary>
+        /// Предлагает пользователю определить длину случайно генерируемого массива чисел в диапазоне (3..20).
+        /// </summary>
+        /// <returns></returns>
+        int ChooseLengthOfRandomizedArray()
+        {
+            int length;
+
+            while (true)
+            {
+                Console.WriteLine("Выберите длину генерируемого массива. Не менее 3 и не более 20 чисел.");
+
+                bool parced = int.TryParse(Console.ReadLine(), out var arrayLength);
+
+                if (parced && arrayLength <= 20 && arrayLength >= 3)
+                {
+                    length = arrayLength;
+                    break;
+                }
+                else
+                    AdditionalFunctions.EnterIncorrectData();
+            }
+
+            return length;
+        }
+
+        enum RandomMod
+        {
+            AllNumbers,
+            PositiveNumbers,
+            NegativeNumbers,
+            EvenNumber,
+            OddNumber
+        }
+
+        /// <summary>
+        /// Метод на основании выбранного мода генерирует случайное число в диапазоне (-100..100).
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        int RandomNumber(RandomMod m)
+        {
+            int randomNumber = 0;
+
+            switch (m)
+            {
+                case RandomMod.AllNumbers:
+                    randomNumber = random.Next(-100, 100);
+                break;
+
+                case RandomMod.PositiveNumbers:
+                    randomNumber = random.Next(100);
+                break;
+
+                case RandomMod.NegativeNumbers:
+                    randomNumber = random.Next(-100, 0);
+                break;
+
+                case RandomMod.EvenNumber:
+                    randomNumber = random.Next(-100, 100) * 2 / 2;
+                break;
+
+                case RandomMod.OddNumber:
+                    randomNumber = random.Next(-100, 100) * 2 / 2 + 1;
+                break;
+            }
+
+            return randomNumber;
         }
     }
 }

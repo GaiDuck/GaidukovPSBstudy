@@ -55,7 +55,7 @@ namespace GaidukovPSBstudyCalculator
             AdditionalFunctions.StartingCalculateByStringMod();
 
             input.GettingSplitedUsersString(
-                input.SplittingUsersString());
+                input.SplittingUsersString("[A-Za-zА-Яа-я .!\"\'@#№;$%:?&=`~<>]", @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))", Console.ReadLine()));
 
             if (input.ValidateInput(input.splitedInput))
             {
@@ -129,6 +129,60 @@ namespace GaidukovPSBstudyCalculator
         {
             calc.Calculate(input.MathOperator, input.FirstNumber, input.SecondNumber);
             input.UpdateExpression(calc.TempResult, mathOperatorNumber);
+        }
+
+        public void SeachForNumbersInArray(string mode) 
+        {
+            int positiveMinimum = 100;
+            int negativeMaximum = -100;
+
+            switch (mode)
+            {
+                case "user":
+                    input.GetUsersArray();
+                    break;
+
+                case "auto":
+                    input.GetRandomArray();
+                    break;
+            }
+
+            if (input.splitedInput.Count > 0)
+            {
+                bool negativeMaximumFound = false;
+                bool positiveMinimumFound = false;
+
+                Console.WriteLine("Исходный массив: ");
+
+                foreach (string s in input.splitedInput)
+                {
+                    Console.Write(s + " ");
+
+                    bool parced = int.TryParse(s, out var num);
+                
+                    if (parced)
+                    {
+                        if (num > negativeMaximum && num < 0)
+                        {
+                            negativeMaximum = num;
+                            negativeMaximumFound = true;
+                        }
+
+                        if (num < positiveMinimum && num > 0)
+                        {
+                            positiveMinimum = num;
+                            positiveMinimumFound = true;
+                        }
+                    }
+                }
+                
+                if (positiveMinimumFound)
+                    Console.WriteLine($"\nМинимальное положительное число: {positiveMinimum}");
+                if (negativeMaximumFound)
+                    Console.WriteLine($"Максимальное отрицательное число: {negativeMaximum}\n");
+            }
+            else
+                AdditionalFunctions.EnterIncorrectData();
         }
     }
 }
