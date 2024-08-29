@@ -16,10 +16,20 @@ namespace GaidukovPSBstudyCalculator
         /// Промежуточный результат вычислений.
         /// </summary>
         public double TempResult { get; private set; }
-        
-        public Calculator()
+        ILogger Logger { get; set; }
+
+        ConsoleLogger logger;
+
+        internal Calculator() : this(new ConsoleLogger())
         {
 
+        }
+
+        public Calculator(ILogger logger)
+        {
+            Logger = logger;
+
+            logger = new ConsoleLogger();
         }
 
         /// <summary>
@@ -111,11 +121,11 @@ namespace GaidukovPSBstudyCalculator
                     break;
 
                     default:
-                        AdditionalFunctions.EnterIncorrectData();
-                    break;
+                        logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                        break;
                 }
             }
-            Logger(mathOperator, firstNumber, secondNumber);
+            logger.LogMathOperation(firstNumber, secondNumber, mathOperator, TempResult);
         }
 
         /// <summary>
@@ -132,12 +142,12 @@ namespace GaidukovPSBstudyCalculator
 
             if (mathOperator == '/' && secondNumber == 0)
             {
-                AdditionalFunctions.EnterIncorrectData();
+                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Console.WriteLine("Обнаружено деление на ноль, операция не может быть выполнена.");
             }
             else if (mathOperator == '^' && firstNumber < 0 && secondNumber > -1 && secondNumber < 1)
             {
-                AdditionalFunctions.EnterIncorrectData();
+                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Console.WriteLine("Обнаружено взятие корняя из отрицательного числа, операция не может быть выполнена.");
             }
             else
@@ -145,17 +155,6 @@ namespace GaidukovPSBstudyCalculator
                 valid = true;
             }
             return valid;
-        }
-
-        /// <summary>
-        /// Метод, выводящий в консоль математическую операцию и ее результат, округленный до 4 знаков после запятой.
-        /// </summary>
-        /// <param name="mathOperator"></param>
-        /// <param name="firstNumber"></param>
-        /// <param name="secondNumber"></param>
-        void Logger(char mathOperator, double firstNumber, double secondNumber)
-        {   
-            Console.WriteLine($"{Math.Round(firstNumber, 4)} {mathOperator} {Math.Round(secondNumber, 4)} = {Math.Round(TempResult, 4)}");
         }
     }
 }

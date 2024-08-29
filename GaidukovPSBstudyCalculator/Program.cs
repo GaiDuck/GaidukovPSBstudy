@@ -1,46 +1,48 @@
 ﻿using GaidukovPSBstudyCalculator;
+using static GaidukovPSBstudyCalculator.ILogger;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        AdditionalFunctions.Greeting();
-        
-        MainFunctoins main = new MainFunctoins();
+        MainFunctions func = new MainFunctions();
+        ConsoleLogger logger = new ConsoleLogger();
 
         bool modeIsCorrect;
 
+        logger.SendMessage(LogMessage.GreetingMassege);
+
         do
         {
-            Console.WriteLine("1 - пошаговый, 2 - строкой, 3 - массив от пользователя, 4 - генерация массива");
+            logger.SendMessage(LogMessage.CalculatorModMessage);
 
             modeIsCorrect = false;
 
-                switch (Console.ReadKey().Key)
+                switch (logger.ReadMessage())
                 {
-                    case ConsoleKey.D1: //калькулятор, считающий по шагам
-                        main.CalculatingStepByStep();
+                    case "1": //калькулятор, считающий по шагам
+                        func.CalculatingStepByStep();
                         modeIsCorrect = true;
                         break;
 
-                    case ConsoleKey.D2:  //калькулятор, считающий из строки
-                        main.CalculatingByString();
+                    case "2":  //калькулятор, считающий из строки
+                        func.CalculatingByString();
+                        modeIsCorrect = true;
+                        break;
+/*
+                    case "3": //обработка массива, вводимого пользователем
+                        func.SeachForNumbersInArray("user");
                         modeIsCorrect = true;
                         break;
 
-                    case ConsoleKey.D3: //обработка массива, вводимого пользователем
-                        main.SeachForNumbersInArray("user");
+                    case "4": //обработка массива, заполненного случайными числами
+                        func.SeachForNumbersInArray("auto");
                         modeIsCorrect = true;
                         break;
-
-                    case ConsoleKey.D4: //обработка массива, заполненного случайными числами
-                        main.SeachForNumbersInArray("auto");
-                        modeIsCorrect = true;
-                        break;
-
+*/
                     default:
-                        Console.WriteLine("Эта функция находится в разработке, попробуйте воспользоваться другой функцией.");
-                        break;
+                    logger.SendMessage(LogMessage.FunctionIsDevelopingMessage);
+                    break;
                 }
         }
         while (!AdditionalFunctions.Exit());

@@ -10,9 +10,12 @@ namespace GaidukovPSBstudyCalculator
     /// <summary>
     /// Класс, выполняющий функции получения информации от пользователя, её первичной проверки и обработки.
     /// </summary>
-    internal class InputData
+    internal class InputConverter
     {
-        Random random = new Random();
+        ILogger Logger { get; set; }
+
+        Random random;
+        ConsoleLogger logger;
 
         public double FirstNumber { get; private set; }
         public double SecondNumber { get; private set; }
@@ -30,14 +33,23 @@ namespace GaidukovPSBstudyCalculator
         List<char> _operators;
         List<string> _bracket;
 
-        public InputData()
+        internal InputConverter() : this(new ConsoleLogger()) //Мы кидаем перегрузку конструкторов, чтобы если мы обратимся к Converter через ConsoleLogger,
+        {                                                     //то сработает этот, а если, например, через JsonLogger, то обратится он к тому, что будет от JsonLogger унаследован?
+            
+        }
+
+        internal InputConverter(ILogger logger)
         {
+            Logger = logger;
+
             splitedInput = new List<string>();
             _numbers = new List<double>();
             _operators = new List<char>();
             _bracket = new List<string>();
-        }
 
+            random = new Random();
+            logger = new ConsoleLogger();
+        }
 
         /// <summary>
         /// Метод, последовательно вызывающий запись чисел и знака математической операции в пошаговом режиме работы калькулятора.
@@ -59,8 +71,6 @@ namespace GaidukovPSBstudyCalculator
                 case "Введите символ операции: ":
                     GetMathOperator();
                 break;
-
-                default: break;
             }
         }
 
@@ -83,7 +93,7 @@ namespace GaidukovPSBstudyCalculator
                     break;
                 }
                 else
-                    AdditionalFunctions.EnterIncorrectData();
+                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
             return input;
         }
@@ -110,7 +120,7 @@ namespace GaidukovPSBstudyCalculator
                 }
 
                 if (!(mathOperatorFound && parsed))
-                    AdditionalFunctions.EnterIncorrectData();
+                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
             while (!mathOperatorFound);
         }
@@ -118,11 +128,11 @@ namespace GaidukovPSBstudyCalculator
         //калькулятор с вводом строкой
 
         /// <summary>
-        /// Метод получает от пользователя математическое выражение одной строкой, 
-        /// удаляет оттуда лишние символы и разбивает строку на отдельные числа и математические операторы.
+        /// Метод получает от пользователя строку, удаляет оттуда символы, указанные в replacePattern 
+        /// и разбивает строку по символам, указанным в splitPattern.
         /// </summary>
         /// <returns></returns>
-        public string[] SplittingUsersString(string replacePattern, string splitPattern, string input) 
+        public string[] SplitUsersString(string replacePattern, string splitPattern, string input) 
         {
             string tempInput = Regex.Replace(input, replacePattern, "");
             string[] inputString = Regex.Split(tempInput, splitPattern);
@@ -134,7 +144,7 @@ namespace GaidukovPSBstudyCalculator
         /// Метод записывает раздробленную строку в список строк.
         /// </summary>
         /// <returns></returns>
-        public void GettingSplitedUsersString(string[] input)
+        public void GetSplitedUsersString(string[] input)
         {
             splitedInput.Clear();
             foreach (string s in input)
@@ -147,7 +157,7 @@ namespace GaidukovPSBstudyCalculator
         /// Метод ищет и записывает индексы пары скобок, в которой отсутствуют другие скобки.
         /// </summary>
         /// <returns></returns>
-        bool SeachForBracketIndex()
+        bool GetBracketIndex()
         {
             bool bracketsAreFound = false;
             bool openBracketIsFound = false;
@@ -186,7 +196,7 @@ namespace GaidukovPSBstudyCalculator
         /// Метод копирует часть изначальной строки, находившуюся между ранее найденными скобками.
         /// </summary>
         /// <param name="bracketsAreFound"></param>
-        void CompliteBracketList(bool bracketsAreFound)
+        void GetBracketList(bool bracketsAreFound)
         {
             BracketIsFound = false;
             _bracket.Clear();
@@ -206,7 +216,7 @@ namespace GaidukovPSBstudyCalculator
         /// Метод принимает заданный список из чисел и математических операторов, затем распределяет числа в один список, а математические операторы в другой.
         /// </summary>
         /// <param name="splitedList"></param>
-        void CompliteLists(List<string> splitedList)
+        void GetLists(List<string> splitedList)
         {
             for(int i = 0; i < splitedList.Count; i++)
             {
@@ -270,10 +280,10 @@ namespace GaidukovPSBstudyCalculator
         {
             OpenBracketIndex = 0;
             CloseBracketIndex = 0;
-                CompliteBracketList( 
-                    SeachForBracketIndex());
+                GetBracketList( 
+                    GetBracketIndex());
 
-            CompliteLists(_bracket);
+            GetLists(_bracket);
         }
 
         /// <summary>
@@ -294,7 +304,7 @@ namespace GaidukovPSBstudyCalculator
         {
             _numbers.Clear();
             _operators.Clear();
-            CompliteLists(splitedInput);
+            GetLists(splitedInput);
         }
 
         /// <summary>
@@ -404,8 +414,12 @@ namespace GaidukovPSBstudyCalculator
 
             splitedInput.Clear();
 
-            GettingSplitedUsersString(
-                SplittingUsersString("[A-Za-zА-Яа-я.!\"\'@#№;$%:?&=`~<>\\/+*^()]", " ", Console.ReadLine()));
+            GetSplitedUsersString(
+                SplitUsersString($"[{AdditionalFunctions.letters}" +
+                                      $"{AdditionalFunctions.punctuation}" +
+                                      $"{AdditionalFunctions.brackets}" +
+                                      $"{AdditionalFunctions.simbols}" +
+                                      $"{AdditionalFunctions.mathOperators}]", " ", Console.ReadLine()));
         }
 
         /// <summary>
@@ -421,16 +435,12 @@ namespace GaidukovPSBstudyCalculator
 
             int arrayLength = ChooseLengthOfRandomizedArray();
 
-
             for (int i = 0; i < arrayLength; i++)
             {
                 splitedInput.Add(Convert.ToString(RandomNumber(mod)));
             }
 
-            //splitedInput.Add(Convert.ToString());
-
             Console.WriteLine("Сгенерирован массив случайных чисел.");
-
         }
 
         /// <summary>
@@ -439,8 +449,6 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="length"></param>
         RandomMod RandomizerMod()
         {
-            RandomMod randomazerMod = new RandomMod();
-
             Console.WriteLine("Выберите режим генерации чисел.\n" +
                               "1 - Все числа;\n" +
                               "2 - Только положительные;\n" +
@@ -448,53 +456,37 @@ namespace GaidukovPSBstudyCalculator
                               "4 - Только четные;\n" +
                               "5 - Только нечетные.\n");
 
-            switch (Console.ReadKey().Key)
+            return Console.ReadKey().Key switch
             {
-                case ConsoleKey.D1:
-                    randomazerMod = RandomMod.AllNumbers;
-                break;
-                    
-                case ConsoleKey.D2:
-                    randomazerMod = RandomMod.PositiveNumbers;
-                break; 
-
-                case ConsoleKey.D3:
-                    randomazerMod = RandomMod.NegativeNumbers;
-                break; 
-
-                case ConsoleKey.D4:
-                    randomazerMod = RandomMod.EvenNumber;
-                break; 
-
-                case ConsoleKey.D5:
-                    randomazerMod = RandomMod.OddNumber;
-                break;  
-            }
-
-            return randomazerMod;
+                ConsoleKey.D1 => RandomMod.AllNumbers,
+                ConsoleKey.D2 => RandomMod.PositiveNumbers,
+                ConsoleKey.D3 => RandomMod.NegativeNumbers,
+                ConsoleKey.D4 => RandomMod.EvenNumber,
+                ConsoleKey.D5 => RandomMod.OddNumber,
+            };
         }
 
         /// <summary>
         /// Предлагает пользователю определить длину случайно генерируемого массива чисел в диапазоне (3..20).
         /// </summary>
         /// <returns></returns>
-        int ChooseLengthOfRandomizedArray()
+        int ChooseLengthOfRandomizedArray(int minLength = 3, int maxLength = 20)
         {
             int length;
-
+            
             while (true)
             {
                 Console.WriteLine("Выберите длину генерируемого массива. Не менее 3 и не более 20 чисел.");
 
                 bool parced = int.TryParse(Console.ReadLine(), out var arrayLength);
 
-                if (parced && arrayLength <= 20 && arrayLength >= 3)
+                if (parced && arrayLength >= minLength && arrayLength <= maxLength)
                 {
                     length = arrayLength;
                     break;
                 }
                 else
-                    AdditionalFunctions.EnterIncorrectData();
+                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
 
             return length;
@@ -516,32 +508,14 @@ namespace GaidukovPSBstudyCalculator
         /// <returns></returns>
         int RandomNumber(RandomMod m)
         {
-            int randomNumber = 0;
-
-            switch (m)
+            return m switch
             {
-                case RandomMod.AllNumbers:
-                    randomNumber = random.Next(-100, 100);
-                break;
-
-                case RandomMod.PositiveNumbers:
-                    randomNumber = random.Next(100);
-                break;
-
-                case RandomMod.NegativeNumbers:
-                    randomNumber = random.Next(-100, 0);
-                break;
-
-                case RandomMod.EvenNumber:
-                    randomNumber = random.Next(-100, 100) * 2 / 2;
-                break;
-
-                case RandomMod.OddNumber:
-                    randomNumber = random.Next(-100, 100) * 2 / 2 + 1;
-                break;
-            }
-
-            return randomNumber;
+                RandomMod.AllNumbers => random.Next(-100, 100),
+                RandomMod.PositiveNumbers => random.Next(100),
+                RandomMod.NegativeNumbers => random.Next(-100, 0),
+                RandomMod.EvenNumber => random.Next(-100, 100) * 2 / 2,
+                RandomMod.OddNumber => random.Next(-100, 100) * 2 / 2 + 1
+            };
         }
     }
 }

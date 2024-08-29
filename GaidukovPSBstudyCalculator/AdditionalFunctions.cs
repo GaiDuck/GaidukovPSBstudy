@@ -12,15 +12,6 @@ namespace GaidukovPSBstudyCalculator
     internal static class AdditionalFunctions 
     {
         /// <summary>
-        /// Останавливает программу и ожидает, пока пользователь не нажмет любую клавишу. 
-        /// </summary>
-        public static void WaitForAnyButtonPush()
-        {
-            Console.WriteLine("\nДля продолжения нажмите любую клавишу... \n ");
-            Console.ReadKey();
-        }
-
-        /// <summary>
         /// Останавливает программу и ожидает, пока пользователь не нажмет клавишу Enter для продолжения или Escape для завершения. 
         /// </summary>
         public static bool Exit()
@@ -56,38 +47,14 @@ namespace GaidukovPSBstudyCalculator
                 return false;
         }
         
-
         /// <summary>
-        /// Выдает в консоль сообщение "Вы ввели не корректные данные.", выделенное красным цветом. 
+        /// Множество всех цифр и запятая, используемая для от
         /// </summary>
-        public static void EnterIncorrectData()
-        {
-            ConsoleColor defaltColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("\nВы ввели не корректные данные.\n");
-            Console.ForegroundColor = defaltColor;
-        }
-
-        /// <summary>
-        /// Выдает в консоль приветственное сообщение и список поддерживаемых калькулятором математических операций. 
-        /// </summary>
-        public static void Greeting()
-        {
-            Console.WriteLine("Добро пожаловать в Калькулятор\n");
-            Console.WriteLine("Мой калькулятор может выполнять следующие операции: " +
-                              "\nСложение: + " +
-                              "\nВычитание: - " +
-                              "\nУмножение: * " +
-                              "\nДеление: / " +
-                              "\nВозведение в степень: ^");
-        }
-
-        /// <summary>
-        /// Выводит пользователю сообщение, когда он запускает режим рассчета из строки.
-        /// </summary>
-        public static void StartingCalculateByStringMod()
-        {
-            Console.Write("Введите математическое выражение одной строкой. Используйте запятую для записи чисел с дробной частью.  \n\n");
-        }        
+        public static string numbers = "0-9,";
+        public static string letters = "A-Za-zА-Яа-я";
+        public static string punctuation = "`|'|\"|:|;|.|!|?|\\|~|_";
+        public static string brackets = "|[|<|{|]|>|}|";
+        public static string simbols = "@#№$&%=";
+        public static string mathOperators = @"(/)|(\-)|(\*)|(\+)|(\^)|(\()|(\))";
     }
 }
