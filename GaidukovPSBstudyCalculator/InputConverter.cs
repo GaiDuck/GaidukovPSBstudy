@@ -15,7 +15,6 @@ namespace GaidukovPSBstudyCalculator
         ILogger Logger { get; set; }
 
         Random random;
-        ConsoleLogger logger;
 
         public double FirstNumber { get; private set; }
         public double SecondNumber { get; private set; }
@@ -33,8 +32,8 @@ namespace GaidukovPSBstudyCalculator
         List<char> _operators;
         List<string> _bracket;
 
-        internal InputConverter() : this(new ConsoleLogger()) //Мы кидаем перегрузку конструкторов, чтобы если мы обратимся к Converter через ConsoleLogger,
-        {                                                     //то сработает этот, а если, например, через JsonLogger, то обратится он к тому, что будет от JsonLogger унаследован?
+        internal InputConverter() : this(new ConsoleLogger())
+        { 
             
         }
 
@@ -48,7 +47,6 @@ namespace GaidukovPSBstudyCalculator
             _bracket = new List<string>();
 
             random = new Random();
-            logger = new ConsoleLogger();
         }
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace GaidukovPSBstudyCalculator
                     break;
                 }
                 else
-                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                    Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
             return input;
         }
@@ -120,7 +118,7 @@ namespace GaidukovPSBstudyCalculator
                 }
 
                 if (!(mathOperatorFound && parsed))
-                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                    Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
             while (!mathOperatorFound);
         }
@@ -486,7 +484,7 @@ namespace GaidukovPSBstudyCalculator
                     break;
                 }
                 else
-                    logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                    Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
             }
 
             return length;

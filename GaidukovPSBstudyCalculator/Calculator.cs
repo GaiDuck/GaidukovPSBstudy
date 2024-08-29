@@ -18,8 +18,6 @@ namespace GaidukovPSBstudyCalculator
         public double TempResult { get; private set; }
         ILogger Logger { get; set; }
 
-        ConsoleLogger logger;
-
         internal Calculator() : this(new ConsoleLogger())
         {
 
@@ -28,8 +26,6 @@ namespace GaidukovPSBstudyCalculator
         public Calculator(ILogger logger)
         {
             Logger = logger;
-
-            logger = new ConsoleLogger();
         }
 
         /// <summary>
@@ -121,11 +117,11 @@ namespace GaidukovPSBstudyCalculator
                     break;
 
                     default:
-                        logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                        Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                         break;
                 }
             }
-            logger.LogMathOperation(firstNumber, secondNumber, mathOperator, TempResult);
+            Logger.LogMathOperation(firstNumber, secondNumber, mathOperator, TempResult);
         }
 
         /// <summary>
@@ -142,12 +138,12 @@ namespace GaidukovPSBstudyCalculator
 
             if (mathOperator == '/' && secondNumber == 0)
             {
-                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Console.WriteLine("Обнаружено деление на ноль, операция не может быть выполнена.");
             }
             else if (mathOperator == '^' && firstNumber < 0 && secondNumber > -1 && secondNumber < 1)
             {
-                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Console.WriteLine("Обнаружено взятие корняя из отрицательного числа, операция не может быть выполнена.");
             }
             else

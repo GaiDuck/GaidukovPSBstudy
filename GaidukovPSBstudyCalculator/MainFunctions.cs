@@ -22,7 +22,6 @@ namespace GaidukovPSBstudyCalculator
 
         Calculator calc;
         InputConverter convert;
-        ConsoleLogger logger;
 
         internal MainFunctions() : this(new ConsoleLogger())
         {
@@ -35,7 +34,6 @@ namespace GaidukovPSBstudyCalculator
 
             calc = new Calculator();
             convert = new InputConverter();
-            logger = new ConsoleLogger();
         }
 
         string StepMessage (CalculatorMod m)
@@ -64,13 +62,13 @@ namespace GaidukovPSBstudyCalculator
         /// </summary>
         public void CalculatingByString()
         {
-            logger.SendMessage(LogMessage.StartCalculateByStringModMessage);
+            Logger.SendMessage(LogMessage.StartCalculateByStringModMessage);
 
             convert.GetSplitedUsersString(
                 convert.SplitUsersString($"[{AdditionalFunctions.letters}" +
                                           $"{AdditionalFunctions.punctuation}" +
                                           $"{AdditionalFunctions.brackets}" +
-                                          $"{AdditionalFunctions.simbols}] ", AdditionalFunctions.mathOperators, logger.ReadMessage()));
+                                          $"{AdditionalFunctions.simbols}] ", AdditionalFunctions.mathOperators, Logger.ReadMessage()));
 
             if (convert.ValidateInput(convert.splitedInput))
             {
@@ -91,7 +89,7 @@ namespace GaidukovPSBstudyCalculator
                 CalculateStringWithoutBrackets();
             }
             else
-                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
         }
 
         /// <summary>
