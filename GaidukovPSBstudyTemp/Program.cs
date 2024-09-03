@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 
-
+/*
 string input = "(1,0+2,3)*3,6-4,8/5,92 qwerty йцукен ... !!! ::: ;;; ===  11 ___ --- {} [] <> ???";
 
 string numbers = "0-9,";
@@ -15,6 +15,7 @@ string replacePattern = $"[{punctuation}]";
 string tempInput = Regex.Replace(input, replacePattern, "#");
 
 Console.WriteLine(tempInput);
+*/
 
 /*
  *

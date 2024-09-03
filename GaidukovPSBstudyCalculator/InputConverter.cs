@@ -55,7 +55,8 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="message"></param>
         public void GetPartOfMathExpression(string message) 
         {
-            Console.WriteLine($"\n{message}");
+            Logger.LogString(LogMessage.Empty, message);
+
             switch (message)
             {
                 case "Введите первое число: ":
@@ -83,7 +84,7 @@ namespace GaidukovPSBstudyCalculator
 
             while (true)
             {
-                parsed = double.TryParse(Console.ReadLine(), out var result);
+                parsed = double.TryParse(Logger.ReadMessage(), out var result);
 
                 if (parsed)
                 {
@@ -106,7 +107,7 @@ namespace GaidukovPSBstudyCalculator
 
             do
             {
-                bool parsed = char.TryParse(Console.ReadLine(), out var input);
+                bool parsed = char.TryParse(Logger.ReadMessage(), out var input);
 
                 if (parsed)
                 {
@@ -408,16 +409,16 @@ namespace GaidukovPSBstudyCalculator
         /// </summary>
         public void GetUsersArray()
         {
-            Console.WriteLine("\nВведите последовательность целых чисел, разделяя их пробелами.");
+            Logger.SendMessage(LogMessage.EnterArrayOfNumbers);
 
             splitedInput.Clear();
 
             GetSplitedUsersString(
-                SplitUsersString($"[{AdditionalFunctions.letters}" +
-                                      $"{AdditionalFunctions.punctuation}" +
-                                      $"{AdditionalFunctions.brackets}" +
-                                      $"{AdditionalFunctions.simbols}" +
-                                      $"{AdditionalFunctions.mathOperators}]", " ", Console.ReadLine()));
+                SplitUsersString($"[{Constants.letters}" +
+                                  $"{Constants.punctuation}" +
+                                  $"{Constants.brackets}" +
+                                  $"{Constants.simbols}" +
+                                  $"{Constants.mathOperators}]", " ", Logger.ReadMessage()));
         }
 
         /// <summary>
@@ -427,7 +428,7 @@ namespace GaidukovPSBstudyCalculator
         {
             splitedInput.Clear();
 
-            Console.WriteLine("Выбран режим случайной генерации чисел.");
+            Logger.SendMessage(LogMessage.ChooseRandomGenerateArrayMod);
 
             RandomMod mod = RandomizerMod();
 
@@ -438,7 +439,7 @@ namespace GaidukovPSBstudyCalculator
                 splitedInput.Add(Convert.ToString(RandomNumber(mod)));
             }
 
-            Console.WriteLine("Сгенерирован массив случайных чисел.");
+            Logger.SendMessage(LogMessage.GeneratedArrayOfRandomNumbers);
         }
 
         /// <summary>
@@ -447,21 +448,38 @@ namespace GaidukovPSBstudyCalculator
         /// <param name="length"></param>
         RandomMod RandomizerMod()
         {
-            Console.WriteLine("Выберите режим генерации чисел.\n" +
-                              "1 - Все числа;\n" +
-                              "2 - Только положительные;\n" +
-                              "3 - Только отрицательные;\n" +
-                              "4 - Только четные;\n" +
-                              "5 - Только нечетные.\n");
+            Logger.SendMessage(LogMessage.ChooseArrayGenerateMod);
 
-            return Console.ReadKey().Key switch
+            RandomMod mod;
+
+            switch(Logger.ReadMessage())
             {
-                ConsoleKey.D1 => RandomMod.AllNumbers,
-                ConsoleKey.D2 => RandomMod.PositiveNumbers,
-                ConsoleKey.D3 => RandomMod.NegativeNumbers,
-                ConsoleKey.D4 => RandomMod.EvenNumber,
-                ConsoleKey.D5 => RandomMod.OddNumber,
-            };
+                case "1":
+                    mod = RandomMod.AllNumbers;
+                    break;
+
+                case "2":
+                    mod = RandomMod.PositiveNumbers;
+                    break;
+
+                case "3":
+                    mod = RandomMod.NegativeNumbers;
+                    break;
+
+                case "4":
+                    mod = RandomMod.EvenNumber;
+                    break;
+
+                case "5":
+                    mod = RandomMod.OddNumber;
+                    break;
+
+                default:
+                    mod = RandomMod.AllNumbers;
+                    break;
+            }
+
+            return mod;
         }
 
         /// <summary>
@@ -474,9 +492,9 @@ namespace GaidukovPSBstudyCalculator
             
             while (true)
             {
-                Console.WriteLine("Выберите длину генерируемого массива. Не менее 3 и не более 20 чисел.");
+                Logger.SendMessage(LogMessage.ChooseAreeyGenerateLength);
 
-                bool parced = int.TryParse(Console.ReadLine(), out var arrayLength);
+                bool parced = int.TryParse(Logger.ReadMessage(), out var arrayLength);
 
                 if (parced && arrayLength >= minLength && arrayLength <= maxLength)
                 {
@@ -514,6 +532,29 @@ namespace GaidukovPSBstudyCalculator
                 RandomMod.EvenNumber => random.Next(-100, 100) * 2 / 2,
                 RandomMod.OddNumber => random.Next(-100, 100) * 2 / 2 + 1
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public string[] GetArray(string mode)
+        {
+            switch (mode)
+            {
+                case "user":
+                    GetUsersArray();
+                    break;
+
+                case "auto":
+                    GetRandomArray();
+                    break;
+            }
+
+            string[] array = splitedInput.ToArray();
+
+            return array;
         }
     }
 }

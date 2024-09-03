@@ -65,10 +65,10 @@ namespace GaidukovPSBstudyCalculator
             Logger.SendMessage(LogMessage.StartCalculateByStringModMessage);
 
             convert.GetSplitedUsersString(
-                convert.SplitUsersString($"[{AdditionalFunctions.letters}" +
-                                          $"{AdditionalFunctions.punctuation}" +
-                                          $"{AdditionalFunctions.brackets}" +
-                                          $"{AdditionalFunctions.simbols}] ", AdditionalFunctions.mathOperators, Logger.ReadMessage()));
+                convert.SplitUsersString($"[{Constants.letters}" +
+                                          $"{Constants.punctuation}" +
+                                          $"{Constants.brackets}" +
+                                          $"{Constants.simbols}] ", Constants.mathOperators, Logger.ReadMessage()));
 
             if (convert.ValidateInput(convert.splitedInput))
             {
@@ -144,82 +144,41 @@ namespace GaidukovPSBstudyCalculator
             convert.UpdateExpression(calc.TempResult, mathOperatorNumber);
         }
 
-
-
-
-
-
-
-
-
-        //Функционал обработчиков массивов не трогал, т.к. их придется значительно рефакторить.
-
-
-
-/*
-
-
         /// <summary>
-        /// Метод перебирает входящие в массив числа, выбирая из них максимальное отрицательное и минимальное положительное.
-        /// Следом выписывает эти числа в консоль. 
+        /// Метод останавливает программу и ожидает, пока пользователь не введет 1 для продолжения или 2 для завершения. 
         /// </summary>
-        /// <param name="mode"></param>
-        public void SeachForNumbersInArray(string mode) 
+        public bool Exit()
         {
-            int positiveMinimum = int.MaxValue;
-            int negativeMaximum = int.MinValue;
+            ConsoleLogger logger = new ConsoleLogger();
+            string button;
+            bool exit;
 
-            switch (mode)
+            while (true)
             {
-                case "user":
-                    convert.GetUsersArray();
-                    break;
+                logger.SendMessage(LogMessage.ExitMessage);
 
-                case "auto":
-                    convert.GetRandomArray();
-                    break;
-            }
+                button = logger.ReadMessage();
 
-            if (convert.splitedInput.Any())
-            {
-                bool negativeMaximumFound = false;
-                bool positiveMinimumFound = false;
-
-                Console.WriteLine("Исходный массив: ");
-
-                foreach (string s in convert.splitedInput)
+                if (button == "1")
                 {
-                    Console.Write(s + " ");
-
-                    bool parced = int.TryParse(s, out var num);
-                
-                    if (parced)
-                    {
-                        if (num > negativeMaximum && num < 0)
-                        {
-                            negativeMaximum = num;
-                            negativeMaximumFound = true;
-                        }
-
-                        if (num < positiveMinimum && num > 0)
-                        {
-                            positiveMinimum = num;
-                            positiveMinimumFound = true;
-                        }
-                    }
+                    exit = true;
+                    break;
                 }
-                
-                if (positiveMinimumFound)
-                    Console.WriteLine($"\nМинимальное положительное число: {positiveMinimum}");
-                if (negativeMaximumFound)
-                    Console.WriteLine($"Максимальное отрицательное число: {negativeMaximum}\n");
+                else if (button == "2")
+                {
+                    exit = false;
+                    break;
+                }
+                else
+                {
+                    logger.SendMessage(LogMessage.UnknownCommandMessage);
+                }
             }
+
+            if (exit)
+                return true;
             else
-                AdditionalFunctions.EnterIncorrectDataMessage();
+                return false;
         }
-
- */
-
-
     }
 }

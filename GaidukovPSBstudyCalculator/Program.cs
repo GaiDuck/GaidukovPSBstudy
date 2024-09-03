@@ -1,4 +1,5 @@
 ﻿using GaidukovPSBstudyCalculator;
+using System;
 using static GaidukovPSBstudyCalculator.ILogger;
 
 internal class Program
@@ -6,6 +7,8 @@ internal class Program
     private static void Main(string[] args)
     {
         MainFunctions func = new MainFunctions();
+        ArrayProcessing arr = new ArrayProcessing();
+        InputConverter convert = new InputConverter();
         ConsoleLogger logger = new ConsoleLogger();
 
         bool modeIsCorrect;
@@ -14,9 +17,11 @@ internal class Program
 
         do
         {
-            logger.SendMessage(LogMessage.CalculatorModMessage);
+            do
+            {
+                logger.SendMessage(LogMessage.CalculatorModMessage);
 
-            modeIsCorrect = false;
+                modeIsCorrect = false;
 
                 switch (logger.ReadMessage())
                 {
@@ -29,23 +34,25 @@ internal class Program
                         func.CalculatingByString();
                         modeIsCorrect = true;
                         break;
-/*
+
                     case "3": //обработка массива, вводимого пользователем
-                        func.SeachForNumbersInArray("user");
+                        arr.SeachForNumbersInArray(convert.GetArray("user"));
                         modeIsCorrect = true;
                         break;
 
                     case "4": //обработка массива, заполненного случайными числами
-                        func.SeachForNumbersInArray("auto");
+                        arr.SeachForNumbersInArray(convert.GetArray("auto"));
                         modeIsCorrect = true;
                         break;
-*/
+
                     default:
-                    logger.SendMessage(LogMessage.FunctionIsDevelopingMessage);
-                    break;
+                        logger.SendMessage(LogMessage.FunctionIsDevelopingMessage);
+                        break;
                 }
+            }
+            while (!modeIsCorrect);
         }
-        while (!AdditionalFunctions.Exit());
+        while (func.Exit());
     }
 }
 

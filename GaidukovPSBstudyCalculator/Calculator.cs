@@ -139,12 +139,12 @@ namespace GaidukovPSBstudyCalculator
             if (mathOperator == '/' && secondNumber == 0)
             {
                 Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
-                Console.WriteLine("Обнаружено деление на ноль, операция не может быть выполнена.");
+                Logger.SendMessage(LogMessage.DivZeroMessage);
             }
             else if (mathOperator == '^' && firstNumber < 0 && secondNumber > -1 && secondNumber < 1)
             {
                 Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
-                Console.WriteLine("Обнаружено взятие корняя из отрицательного числа, операция не может быть выполнена.");
+                Logger.SendMessage(LogMessage.NegativeRootMessage);
             }
             else
             {
