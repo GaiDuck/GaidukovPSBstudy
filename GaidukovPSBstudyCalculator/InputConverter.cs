@@ -417,8 +417,7 @@ namespace GaidukovPSBstudyCalculator
                 SplitUsersString($"[{Constants.letters}" +
                                   $"{Constants.punctuation}" +
                                   $"{Constants.brackets}" +
-                                  $"{Constants.simbols}" +
-                                  $"{Constants.mathOperators}]", " ", Logger.ReadMessage()));
+                                  $"{Constants.simbols}]", " ", Logger.ReadMessage()));
         }
 
         /// <summary>
@@ -475,6 +474,7 @@ namespace GaidukovPSBstudyCalculator
                     break;
 
                 default:
+                    Logger.SendMessage(LogMessage.DefaultMod);
                     mod = RandomMod.AllNumbers;
                     break;
             }

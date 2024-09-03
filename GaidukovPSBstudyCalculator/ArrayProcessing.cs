@@ -9,9 +9,6 @@ namespace GaidukovPSBstudyCalculator
     internal class ArrayProcessing
     {
         ILogger Logger { get; set; }
-
-        Calculator calc;
-        InputConverter convert;
         
         internal ArrayProcessing() : this(new ConsoleLogger())
         {
@@ -21,9 +18,6 @@ namespace GaidukovPSBstudyCalculator
         internal ArrayProcessing(ILogger logger)
         {
             Logger = logger;
-
-            calc = new Calculator();
-            convert = new InputConverter();
         }
 
         /// <summary>
@@ -36,15 +30,16 @@ namespace GaidukovPSBstudyCalculator
             int positiveMinimum = int.MaxValue;
             int negativeMaximum = int.MinValue;
 
-            if (convert.splitedInput.Any())
+            if (array.Any())
             {
                 bool negativeMaximumFound = false;
                 bool positiveMinimumFound = false;
 
                 Logger.SendMessage(LogMessage.OriginalArray);
 
-                foreach (string s in convert.splitedInput)
+                foreach (string s in array)
                 {
+                    //Console.WriteLine($"{s} ");
                     Logger.LogString(LogMessage.Space, s);
 
                     bool parced = int.TryParse(s, out var num);

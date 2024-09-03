@@ -35,6 +35,8 @@ namespace GaidukovPSBstudyCalculator
         ChooseArrayGenerateMod,
         ChooseAreeyGenerateLength,
 
+        DefaultMod,
+
         Space,
         Empty
     }
@@ -111,6 +113,8 @@ namespace GaidukovPSBstudyCalculator
                                                      "5 - Только нечетные.\n",
 
                 LogMessage.ChooseAreeyGenerateLength => "Выберите длину генерируемого массива. Не менее 3 и не более 20 чисел.",
+
+                LogMessage.DefaultMod => "Команда не распознана, выбран режим по умолчанию.",
 
                 LogMessage.Space => " ",
 

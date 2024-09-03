@@ -17,9 +17,9 @@ namespace GaidukovPSBstudyCalculator
         public static string numbers = "0-9,";
 
         /// <summary>
-        /// Множество всех букв русского и английского алфавита, и пробел.
+        /// Множество всех букв русского и английского алфавита.
         /// </summary>
-        public static string letters = "A-Za-zА-Яа-я ";
+        public static string letters = "A-Za-zА-Яа-я";
 
         /// <summary>
         /// Множество всех знаков припинания, исключая наклонный слеш.
@@ -40,5 +40,10 @@ namespace GaidukovPSBstudyCalculator
         /// Множество всех математических операторов.
         /// </summary>
         public static string mathOperators = @"(/)|(\-)|(\*)|(\+)|(\^)|(\()|(\))";
+
+        /// <summary>
+        /// Пробел.
+        /// </summary>
+        public static string space = " ";
     }
 }
