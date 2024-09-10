@@ -1,5 +1,49 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+
+
+/*
+string[] array = { "kjd456", "dkj503", "abs123", "abs234", "jfh123" };
+Array.Sort(array);
+
+foreach (var item in array)
+    Console.WriteLine(item);
+*/
+
+/*
+Random random = new Random();
+
+for (int i = 0; i < 10; i++)
+{
+    int a = random.Next(0, 3);
+    Console.WriteLine(a);
+}
+*/
+
+/*
+char[] chars = new char[7];
+int j = 4;
+
+for (int i = 0; i < chars.Length - j; i++)
+{
+    chars[i] = Convert.ToChar(random.Next(65, 90));
+}
+
+for (int i = chars.Length - j; i < chars.Length; i++)
+{
+    chars[i] = Convert.ToChar(random.Next(48, 57));
+}
+
+string s = new string(chars);
+Console.WriteLine(s);
+*/
+
+/*
+char c = Convert.ToChar(65);
+Console.WriteLine(c);
+*/
+
 
 /*
 string input = "(1,0+2,3)*3,6-4,8/5,92 qwerty йцукен ... !!! ::: ;;; ===  11 ___ --- {} [] <> ???";
@@ -27,7 +71,7 @@ string splitPattern = @"(/)|(-)|(\*)|(\+)|(\^)|(\()|(\))";
 string tempInput = Regex.Replace(input, replacePattern, "");
 string[] userInput = Regex.Split(tempInput, splitPattern);
 
-foreach (var match in userInput)
+foreach (var match in userInput)cha
 {
     Console.WriteLine(match);
 }

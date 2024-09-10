@@ -6,10 +6,11 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        MainFunctions func = new MainFunctions();
-        ArrayProcessing arr = new ArrayProcessing();
-        InputConverter convert = new InputConverter();
         ConsoleLogger logger = new ConsoleLogger();
+        MainFunctions func = new MainFunctions(logger);
+        ArrayProcessing arr = new ArrayProcessing(logger);
+        InputConverter convert = new InputConverter(logger);
+
 
         bool modeIsCorrect;
 

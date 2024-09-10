@@ -32,8 +32,8 @@ namespace GaidukovPSBstudyCalculator
         {
             Logger = logger;
 
-            calc = new Calculator();
-            convert = new InputConverter();
+            calc = new Calculator(Logger);
+            convert = new InputConverter(Logger);
         }
 
         string StepMessage (CalculatorMod m)
@@ -149,15 +149,14 @@ namespace GaidukovPSBstudyCalculator
         /// </summary>
         public bool Exit()
         {
-            ConsoleLogger logger = new ConsoleLogger();
             string button;
             bool exit;
 
             while (true)
             {
-                logger.SendMessage(LogMessage.ExitMessage);
+                Logger.SendMessage(LogMessage.ExitMessage);
 
-                button = logger.ReadMessage();
+                button = Logger.ReadMessage();
 
                 if (button == "1")
                 {
@@ -171,7 +170,7 @@ namespace GaidukovPSBstudyCalculator
                 }
                 else
                 {
-                    logger.SendMessage(LogMessage.UnknownCommandMessage);
+                    Logger.SendMessage(LogMessage.UnknownCommandMessage);
                 }
             }
 
