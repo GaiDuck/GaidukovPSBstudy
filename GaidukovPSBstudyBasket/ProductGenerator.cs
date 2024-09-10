@@ -121,14 +121,30 @@ namespace GaidukovPSBstudyBasket
             return random.Next(0, 10);
         }
 
-        public string SpecialFeatureByType(type Type)
+        public string SpecialFeatureByType(string ProductType)
         {
-            return Type switch
+            string feature = null; 
+
+            switch(ProductType)
             {
-                type.washingMachine => "Сушилка",
-                type.fan => "Турборежим",
-                type.microwave => "Режим разморозки"
+                case "Стиральная машина":
+                    feature = "Сушилка";
+                    break;
+
+                case "Фен":
+                    feature = "Турборежим";
+                    break; 
+
+                case "Микроволновая печь":
+                    feature = "Режим разморозки";
+                    break; 
+
+                default: 
+                    feature = "Какая-то ерунда";
+                    break;
             };
+
+            return feature;
         }
     }
 }

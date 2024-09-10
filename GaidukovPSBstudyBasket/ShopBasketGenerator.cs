@@ -40,7 +40,7 @@ namespace GaidukovPSBstudyBasket
                     if (product.Article == category[i])
                     {
                         logger.SendMessage($"\nАртикул: {product.Article} \nТип товара: {product.ProductType} \nЦена: {product.Cost} \nОценка: {product.Score} \nВес: {product.Weight} " +
-                                           $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(type.washingMachine)}: {product.SpecialFeature}");
+                                           $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(product.ProductType)}: {product.SpecialFeature}");
                     }
                 }
             }
@@ -78,7 +78,7 @@ namespace GaidukovPSBstudyBasket
             foreach (ProductGenerator product in UsersBasket)
             {
                     logger.SendMessage($"Артикул: {product.Article} \nТип товара: {product.ProductType} \nЦена: {product.Cost} \nОценка: {product.Score} \nВес: {product.Weight} " +
-                                       $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(type.washingMachine)}: {product.SpecialFeature}");
+                                       $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(product.ProductType)}: {product.SpecialFeature}");
             }
         }
     }
