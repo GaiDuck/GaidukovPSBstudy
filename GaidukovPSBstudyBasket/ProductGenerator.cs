@@ -21,12 +21,27 @@ namespace GaidukovPSBstudyBasket
 
         List <string> articles = new List <string> ();
 
+        public ProductGenerator GenerateProduct(type Type)
+        {
+            ProductGenerator generatedProduct = new ProductGenerator ();
+
+            generatedProduct.Article = GenerateArticle();
+            generatedProduct.ProductType = ChooseType(Type);
+            generatedProduct.Cost = GenerateCost(Type);
+            generatedProduct.Score = GenerateScore();
+            generatedProduct.Weight = GenerateWeight(Type);
+            generatedProduct.DeliveryDays = GenerateDeliveryDays(); 
+            generatedProduct.SpecialFeature = GenerateSpecialFeature();
+
+            return generatedProduct;
+        }
+        
         /// <summary>
         /// Метод создает случайный артикул, состоящий из 3х букв и 4х цифр, затем проверяет артикул на уникальность, 
         /// записывает сгенеренный артикул в список артикулов и возвращает его.
         /// </summary>
         /// <returns></returns>
-        public string GenerateArticle()
+        string GenerateArticle()
         {
             bool stop = false;
             string s;
@@ -62,7 +77,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайный тип товара.
         /// </summary>
         /// <returns></returns>
-        public type GenerateType()
+        type GenerateType()
         {
             int t = random.Next(1, 4);
             return t switch
@@ -73,12 +88,22 @@ namespace GaidukovPSBstudyBasket
             };
         }
 
+        string ChooseType(type Type)
+        {
+            return Type switch
+            {
+                type.washingMachine => "Стиральная машина",
+                type.fan => "Фен",
+                type.microwave => "Микроволновая печь"
+            };
+        }
+
         /// <summary>
         /// Метод возвращает случайную стоимость товара, в зависимости от типа.
         /// </summary>
         /// <param name="Type"></param>
         /// <returns></returns>
-        public double GenerateCost(type Type)
+        double GenerateCost(type Type)
         {
             return Type switch
             {
@@ -92,7 +117,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайную оценку товара.
         /// </summary>
         /// <returns></returns>
-        public double GenerateScore()
+        double GenerateScore()
         {
             return random.Next(0, 5) + random.NextDouble();
         }
@@ -102,7 +127,7 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         /// <param name="Type"></param>
         /// <returns></returns>
-        public double GenerateWeight(type Type)
+        double GenerateWeight(type Type)
         {
             return Type switch
             {
@@ -116,9 +141,21 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайное число дней до доставки товара.
         /// </summary>
         /// <returns></returns>
-        public int GenerateDeliveryDays()
+        int GenerateDeliveryDays()
         {
             return random.Next(0, 10);
+        }
+
+        /// <summary>
+        /// Метод возвращает выбранное случайным образом "yes" или "no".
+        /// </summary>
+        /// <returns></returns>
+        string GenerateSpecialFeature()
+        {
+            if (random.Next(0, 2) == 0)
+                return "yes";
+            else 
+                return "no";
         }
 
         public string SpecialFeatureByType(string ProductType)

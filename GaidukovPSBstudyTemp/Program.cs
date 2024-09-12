@@ -1,7 +1,73 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
+
+
+
+        sortedProduct = product.OrderBy(s => s.Cost);
+
+
+
+
+/*
+var weatherForecast = new WeatherForecast
+{
+    Date = DateTime.Parse("2019-08-01"),
+    TemperatureCelsius = 25,
+    Summary = "Hot"
+};
+
+string fileName = "WeatherForecast.json";
+string jsonString = JsonSerializer.Serialize(weatherForecast);
+File.WriteAllText(fileName, jsonString);
+
+Console.WriteLine(File.ReadAllText(fileName));
+
+public class WeatherForecast
+{
+    public DateTimeOffset Date { get; set; }
+    public int TemperatureCelsius { get; set; }
+    public string? Summary { get; set; }
+}
+
+*/
+
+
+
+
+
+
+/*
+// сохранение данных
+using (FileStream fs = new FileStream(@"GaidukovPSBstudyCalculator\user.json", FileMode.OpenOrCreate))
+{
+Person tom = new Person("Tomas", 37);
+await JsonSerializer.SerializeAsync<Person>(fs, tom);
+Console.WriteLine("Data has been saved to file");
+}
+
+
+// чтение данных
+using (FileStream fs = new FileStream(@"GaidukovPSBstudyCalculator\user.json", FileMode.OpenOrCreate))
+{
+Person? person = await JsonSerializer.DeserializeAsync<Person>(fs);
+Console.WriteLine($"Name: {person?.Name}  Age: {person?.Age}");
+}
+
+class Person
+{
+    public string Name { get; }
+    public int Age { get; set; }
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+}
+*/
 
 /*
 string[] array = { "kjd456", "dkj503", "abs123", "abs234", "jfh123" };

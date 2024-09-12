@@ -9,18 +9,16 @@ enum type
 
 internal class Program
 {
-
     private static void Main(string[] args)
     {
         ConsoleLogger logger = new ConsoleLogger();
-        ShopBasketGenerator gen = new ShopBasketGenerator();
+        ShopBasketGenerator basket = new ShopBasketGenerator();
+        ProductGenerator generator = new ProductGenerator();
 
-        List<ProductGenerator> product = null;
+        List<ProductGenerator> product = new List<ProductGenerator>();
+
         bool exit = false;
-
-        List<ProductGenerator> washingMachines = new List<ProductGenerator>() { ProductWashingMachine.Bosh, ProductWashingMachine.Ural, ProductWashingMachine.Toshiba };
-        List<ProductGenerator> microwaves = new List<ProductGenerator>() { ProductMicrowave.Vitek, ProductMicrowave.Brizz, ProductMicrowave.Liama };
-        List<ProductGenerator> fans = new List<ProductGenerator>() { ProductFan.Dyson, ProductFan.Veterok, ProductFan.Tuvio };
+        int sortingPattern = 1;
 
         logger.SendMessage(LogMessage.GreetingMassegeForShopMessage);
         do
@@ -32,26 +30,63 @@ internal class Program
 
                 if (parced)
                 {
+                    logger.SendMessage("\nСколько товаров категории отобразить?\n");
+                    parced = int.TryParse(logger.ReadMessage(), out int productsOnScreenNumber);
+
+                    if (!parced)
+                    {
+                        logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                        logger.SendMessage("Выбрано значение по умолчанию: 3.");
+                        productsOnScreenNumber = 3;
+                    }
+
+                    logger.SendMessage("\nОпределите параметр сортировки:\n" +
+                                           "1 - сортировка по названию,\n" +
+                                           "2 - сортировка по стоимости,\n" +
+                                           "3 - сортировка по оценке,\n" +
+                                           "4 - сортировка по весу,\n" +
+                                           "5 - сортировка по времени доставки.\n");
+                    parced = int.TryParse(logger.ReadMessage(), out int sortingPatternNumber);
+
+                    if (!parced)
+                    {
+                        logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                        logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
+                        sortingPatternNumber = 1;
+                    }
+
+                    sortingPattern = sortingPatternNumber;
+
                     switch (categoryNumber)
                     {
                         case '1':
-                            product = washingMachines;
+                            for (int i = 0; i < productsOnScreenNumber; i++)
+                            {
+                                product.Add(generator.GenerateProduct(type.washingMachine));
+                            }
                             exit = true;
                             break;
 
                         case '2':
-                            product = fans;
+                            for (int i = 0; i < productsOnScreenNumber; i++)
+                            {
+                                product.Add(generator.GenerateProduct(type.fan));
+                            }
                             exit = true;
                             break;
 
                         case '3':
-                            product = microwaves;
+                            for (int i = 0; i < productsOnScreenNumber; i++)
+                            {
+                                product.Add(generator.GenerateProduct(type.microwave));
+                            }
                             exit = true;
                             break;
 
                         default:
                             logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                             break;
+                        
                     }
                 }
                 else
@@ -61,12 +96,11 @@ internal class Program
 
             exit = false;
 
-            gen.GetSortedCategoryList(product);
-            gen.SellSortedCategoryList(product);
+            basket.SellSortedCategoryList(basket.GetSortedProductList(product, sortingPattern));
 
             logger.SendMessage("\nВведите артикул желаемого товара.\n");
 
-            gen.GetUsersBasket(product, logger.ReadMessage());
+            basket.GetUsersBasket(product, logger.ReadMessage());
 
             logger.SendMessage("\nЖелаете продолжть покупки?" +
                                "\nДля продолжения нажмите Enter клавишу." +
@@ -78,6 +112,6 @@ internal class Program
         while (!exit);
 
         logger.SendMessage("\nКорзина:");
-        gen.WriteUsersBasket();
+        basket.WriteUsersBasket();
     }
 }

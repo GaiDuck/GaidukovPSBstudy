@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
@@ -13,36 +14,49 @@ namespace GaidukovPSBstudyBasket
 
         List<string> category = new List<string>();
         List<ProductGenerator> UsersBasket = new List<ProductGenerator>();
-        
+
         /// <summary>
         /// метод принимает список продуктов одной категории, записывает артиклы всех продуктов и сортирует список артикулов. 
         /// </summary>
         /// <param name="Produckts"></param>
-        public void GetSortedCategoryList(List<ProductGenerator> Produckts)
+        public List<ProductGenerator> GetSortedProductList(List<ProductGenerator> Produckts, int sortingPattern)
         {
-            foreach (ProductGenerator product in Produckts)
+            List <ProductGenerator> product = new List <ProductGenerator>();
+            
+            switch (sortingPattern)
             {
-                category.Add(product.Article); //Как сделать сортировку не только по артиклу?
-            }
+                case 1:
+                    product = Produckts.OrderBy(s => s.Article).ToList();
+                    break;
 
-            category.Sort();
+                case 2:
+                    product = Produckts.OrderBy(s => s.Cost).ToList();
+                    break;
+
+                case 3:
+                    product = Produckts.OrderBy(s => s.Score).ToList();
+                    break;
+
+                case 4:
+                    product = Produckts.OrderBy(s => s.Weight).ToList();
+                    break;
+
+                case 5:
+                    product = Produckts.OrderBy(s => s.DeliveryDays).ToList();
+                    break;
+            }
+            return product;
         }
 
         /// <summary>
         /// Метод выписывает список товаров с характеристиками из категории в соответствии с отсортированным списком артикулов. 
         /// </summary>
-        public void SellSortedCategoryList(List<ProductGenerator> Produckts)
+        public void SellSortedCategoryList(List<ProductGenerator> product)
         {
-            for (int i = 0; i < category.Count; i++)
+            foreach (ProductGenerator p in product)
             {
-                foreach (ProductGenerator product in Produckts)
-                {
-                    if (product.Article == category[i])
-                    {
-                        logger.SendMessage($"\nАртикул: {product.Article} \nТип товара: {product.ProductType} \nЦена: {product.Cost} \nОценка: {product.Score} \nВес: {product.Weight} " +
-                                           $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(product.ProductType)}: {product.SpecialFeature}");
-                    }
-                }
+                logger.SendMessage($"\nАртикул: {p.Article} \nТип товара: {p.ProductType} \nЦена: {Math.Round(p.Cost, 2)} \nОценка: {Math.Round(p.Score, 2)} \nВес: {Math.Round(p.Weight, 1)} " +
+                                   $"\nДней до доставки: {p.DeliveryDays} \n{prod.SpecialFeatureByType(p.ProductType)}: {p.SpecialFeature}");
             }
         }
 

@@ -113,7 +113,7 @@ namespace GaidukovPSBstudyBasket
                 LogMessage.ShopCategoryMessage => "Выберите интересующую вас категорию товаров:" +
                                                   "\n1 - стиральные машины" +
                                                   "\n2 - фены" +
-                                                  "\n3 - микроволновые печи",
+                                                  "\n3 - микроволновые печи\n",
 
                 LogMessage.DefaultMod => "Команда не распознана, выбран режим по умолчанию.",
 
