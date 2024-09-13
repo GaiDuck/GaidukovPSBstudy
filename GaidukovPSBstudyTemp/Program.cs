@@ -5,11 +5,14 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 
+/*
+List <int> ints = new List<int>() { 1, 2, 3 };
 
+for (int i = 0; i < 10; i++)
+{
 
-        sortedProduct = product.OrderBy(s => s.Cost);
-
-
+}
+*/
 
 
 /*

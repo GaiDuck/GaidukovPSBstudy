@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class ShopBasketGenerator
+    internal class BasketConvertor
     {
         ProductGenerator prod = new ProductGenerator();
         ConsoleLogger logger = new ConsoleLogger();
 
         List<string> category = new List<string>();
-        List<ProductGenerator> UsersBasket = new List<ProductGenerator>();
+        public List<ProductGenerator> UsersBasket = new List<ProductGenerator>();
 
         /// <summary>
-        /// метод принимает список продуктов одной категории, записывает артиклы всех продуктов и сортирует список артикулов. 
+        /// метод принимает список продуктов одной категории и параметр, покотому сортируется товар, затем сортирует товары в соответствии с параметром. 
         /// </summary>
         /// <param name="Produckts"></param>
         public List<ProductGenerator> GetSortedProductList(List<ProductGenerator> Produckts, int sortingPattern)
@@ -34,7 +34,7 @@ namespace GaidukovPSBstudyBasket
                     break;
 
                 case 3:
-                    product = Produckts.OrderBy(s => s.Score).ToList();
+                    product = Produckts.OrderByDescending(s => s.Score).ToList();
                     break;
 
                 case 4:
@@ -51,12 +51,12 @@ namespace GaidukovPSBstudyBasket
         /// <summary>
         /// Метод выписывает список товаров с характеристиками из категории в соответствии с отсортированным списком артикулов. 
         /// </summary>
-        public void SellSortedCategoryList(List<ProductGenerator> product)
+        public void SellSortedCategoryList(List<ProductGenerator> product, int productsOnScreenNumber)
         {
-            foreach (ProductGenerator p in product)
+            for (int i = 0; i < productsOnScreenNumber; i++)
             {
-                logger.SendMessage($"\nАртикул: {p.Article} \nТип товара: {p.ProductType} \nЦена: {Math.Round(p.Cost, 2)} \nОценка: {Math.Round(p.Score, 2)} \nВес: {Math.Round(p.Weight, 1)} " +
-                                   $"\nДней до доставки: {p.DeliveryDays} \n{prod.SpecialFeatureByType(p.ProductType)}: {p.SpecialFeature}");
+                logger.SendMessage($"\nАртикул: {product[i].Article} \nТип товара: {product[i].ProductType} \nЦена: {Math.Round(product[i].Cost, 2)} \nОценка: {Math.Round(product[i].Score, 2)} \nВес: {Math.Round(product[i].Weight, 1)} " +
+                                   $"\nДней до доставки: {product[i].DeliveryDays} \n{prod.GetSpecialFeatureByType(product[i].ProductType)}: {product[i].SpecialFeature}");
             }
         }
 
@@ -85,15 +85,25 @@ namespace GaidukovPSBstudyBasket
         }
 
         /// <summary>
-        /// Метод выписывает в консоль все товары, взятые пользователм в корзину. 
+        /// Метод предлагает пользователю выбрать параметр, по которому будет происходить сортировка и возвращает его номер. 
         /// </summary>
-        public void WriteUsersBasket()
+        public int GetSortingParametr()
         {
-            foreach (ProductGenerator product in UsersBasket)
+            logger.SendMessage("\nОпределите параметр сортировки:\n" +
+                               "1 - сортировка по названию,\n" +
+                               "2 - сортировка по стоимости,\n" +
+                               "3 - сортировка по оценке,\n" +
+                               "4 - сортировка по весу,\n" +
+                               "5 - сортировка по времени доставки.\n");
+            bool parced = int.TryParse(logger.ReadMessage(), out int sortingPatternNumber);
+
+            if (!parced)
             {
-                    logger.SendMessage($"Артикул: {product.Article} \nТип товара: {product.ProductType} \nЦена: {product.Cost} \nОценка: {product.Score} \nВес: {product.Weight} " +
-                                       $"\nДней до доставки: {product.DeliveryDays} \n{prod.SpecialFeatureByType(product.ProductType)}: {product.SpecialFeature}");
+                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
+                sortingPatternNumber = 1;
             }
+            return sortingPatternNumber;
         }
     }
 }

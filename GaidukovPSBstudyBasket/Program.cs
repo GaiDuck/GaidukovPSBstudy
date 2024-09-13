@@ -1,4 +1,5 @@
 ﻿using GaidukovPSBstudyBasket;
+using System.Text.Json;
 
 enum type
 {
@@ -12,13 +13,21 @@ internal class Program
     private static void Main(string[] args)
     {
         ConsoleLogger logger = new ConsoleLogger();
-        ShopBasketGenerator basket = new ShopBasketGenerator();
+        BasketConvertor basket = new BasketConvertor();
         ProductGenerator generator = new ProductGenerator();
 
         List<ProductGenerator> product = new List<ProductGenerator>();
+        List<ProductGenerator> usersBasket = new List<ProductGenerator>();
 
         bool exit = false;
         int sortingPattern = 1;
+        int productsOnScreenNumber = 3;
+
+        string fileName;
+        string jsonString;
+
+        generator.GetShopAssortment();
+        generator.SerializeShopAssortment();
 
         logger.SendMessage(LogMessage.GreetingMassegeForShopMessage);
         do
@@ -31,62 +40,52 @@ internal class Program
                 if (parced)
                 {
                     logger.SendMessage("\nСколько товаров категории отобразить?\n");
-                    parced = int.TryParse(logger.ReadMessage(), out int productsOnScreenNumber);
+                    parced = int.TryParse(logger.ReadMessage(), out int productsOnScreen);
 
                     if (!parced)
                     {
                         logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                         logger.SendMessage("Выбрано значение по умолчанию: 3.");
-                        productsOnScreenNumber = 3;
                     }
+                    else
+                        productsOnScreenNumber = productsOnScreen;
 
-                    logger.SendMessage("\nОпределите параметр сортировки:\n" +
-                                           "1 - сортировка по названию,\n" +
-                                           "2 - сортировка по стоимости,\n" +
-                                           "3 - сортировка по оценке,\n" +
-                                           "4 - сортировка по весу,\n" +
-                                           "5 - сортировка по времени доставки.\n");
-                    parced = int.TryParse(logger.ReadMessage(), out int sortingPatternNumber);
+                    sortingPattern = basket.GetSortingParametr();
 
-                    if (!parced)
-                    {
-                        logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
-                        logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
-                        sortingPatternNumber = 1;
-                    }
-
-                    sortingPattern = sortingPatternNumber;
+                    product.Clear();
 
                     switch (categoryNumber)
                     {
                         case '1':
-                            for (int i = 0; i < productsOnScreenNumber; i++)
-                            {
-                                product.Add(generator.GenerateProduct(type.washingMachine));
-                            }
+
+                            fileName = "WashingMachines.json";
+                            jsonString = File.ReadAllText(fileName);
+                            product = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+
                             exit = true;
                             break;
 
                         case '2':
-                            for (int i = 0; i < productsOnScreenNumber; i++)
-                            {
-                                product.Add(generator.GenerateProduct(type.fan));
-                            }
+
+                            fileName = "Fans.json";
+                            jsonString = File.ReadAllText(fileName);
+                            product = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+
                             exit = true;
                             break;
 
                         case '3':
-                            for (int i = 0; i < productsOnScreenNumber; i++)
-                            {
-                                product.Add(generator.GenerateProduct(type.microwave));
-                            }
+
+                            fileName = "Fans.json";
+                            jsonString = File.ReadAllText(fileName);
+                            product = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+
                             exit = true;
                             break;
 
                         default:
                             logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
-                            break;
-                        
+                            break; 
                     }
                 }
                 else
@@ -96,7 +95,7 @@ internal class Program
 
             exit = false;
 
-            basket.SellSortedCategoryList(basket.GetSortedProductList(product, sortingPattern));
+            basket.SellSortedCategoryList(basket.GetSortedProductList(product, sortingPattern), productsOnScreenNumber);
 
             logger.SendMessage("\nВведите артикул желаемого товара.\n");
 
@@ -112,6 +111,6 @@ internal class Program
         while (!exit);
 
         logger.SendMessage("\nКорзина:");
-        basket.WriteUsersBasket();
+        basket.SellSortedCategoryList(basket.GetSortedProductList(basket.UsersBasket, basket.GetSortingParametr()), basket.UsersBasket.Count());
     }
 }

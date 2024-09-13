@@ -1,7 +1,9 @@
-﻿using System;
+﻿using GaidukovPSBstudyBasket;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
@@ -17,21 +19,25 @@ namespace GaidukovPSBstudyBasket
         public double Weight { get; set; }
         public int DeliveryDays { get; set; }
         public string SpecialFeature { get; set; }
+        public static int NumberOfGeneratedProducts { get; set; } = 10;
 
+        List<ProductGenerator> WashingMachines = new List<ProductGenerator>();
+        List<ProductGenerator> Fans = new List<ProductGenerator>();
+        List<ProductGenerator> Microwaves = new List<ProductGenerator>();
 
-        List <string> articles = new List <string> ();
+        List <string> UsedArticles = new List <string> ();
 
-        public ProductGenerator GenerateProduct(type Type)
+        public ProductGenerator GetRandomProduct(type Type)
         {
             ProductGenerator generatedProduct = new ProductGenerator ();
 
-            generatedProduct.Article = GenerateArticle();
-            generatedProduct.ProductType = ChooseType(Type);
-            generatedProduct.Cost = GenerateCost(Type);
-            generatedProduct.Score = GenerateScore();
-            generatedProduct.Weight = GenerateWeight(Type);
-            generatedProduct.DeliveryDays = GenerateDeliveryDays(); 
-            generatedProduct.SpecialFeature = GenerateSpecialFeature();
+            generatedProduct.Article = GetRandomArticle();
+            generatedProduct.ProductType = GetRandomTitleByType(Type);
+            generatedProduct.Cost = GetRandomCostByType(Type);
+            generatedProduct.Score = GetRandomScore();
+            generatedProduct.Weight = GetRandomWeight(Type);
+            generatedProduct.DeliveryDays = GetRandomDeliveryDays(); 
+            generatedProduct.SpecialFeature = GetRandomSpecialFeature();
 
             return generatedProduct;
         }
@@ -41,7 +47,7 @@ namespace GaidukovPSBstudyBasket
         /// записывает сгенеренный артикул в список артикулов и возвращает его.
         /// </summary>
         /// <returns></returns>
-        string GenerateArticle()
+        string GetRandomArticle()
         {
             bool stop = false;
             string s;
@@ -62,9 +68,9 @@ namespace GaidukovPSBstudyBasket
 
                 s = new string(chars);
 
-                if (!articles.Contains(s))
+                if (!UsedArticles.Contains(s))
                 {
-                    articles.Add(s);
+                    UsedArticles.Add(s);
                     stop = true;
                 }
             } 
@@ -77,7 +83,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайный тип товара.
         /// </summary>
         /// <returns></returns>
-        type GenerateType()
+        type GetType()
         {
             int t = random.Next(1, 4);
             return t switch
@@ -88,7 +94,7 @@ namespace GaidukovPSBstudyBasket
             };
         }
 
-        string ChooseType(type Type)
+        string GetRandomTitleByType(type Type)
         {
             return Type switch
             {
@@ -103,7 +109,7 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         /// <param name="Type"></param>
         /// <returns></returns>
-        double GenerateCost(type Type)
+        double GetRandomCostByType(type Type)
         {
             return Type switch
             {
@@ -117,7 +123,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайную оценку товара.
         /// </summary>
         /// <returns></returns>
-        double GenerateScore()
+        double GetRandomScore()
         {
             return random.Next(0, 5) + random.NextDouble();
         }
@@ -127,7 +133,7 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         /// <param name="Type"></param>
         /// <returns></returns>
-        double GenerateWeight(type Type)
+        double GetRandomWeight(type Type)
         {
             return Type switch
             {
@@ -141,7 +147,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайное число дней до доставки товара.
         /// </summary>
         /// <returns></returns>
-        int GenerateDeliveryDays()
+        int GetRandomDeliveryDays()
         {
             return random.Next(0, 10);
         }
@@ -150,7 +156,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает выбранное случайным образом "yes" или "no".
         /// </summary>
         /// <returns></returns>
-        string GenerateSpecialFeature()
+        string GetRandomSpecialFeature()
         {
             if (random.Next(0, 2) == 0)
                 return "yes";
@@ -158,7 +164,12 @@ namespace GaidukovPSBstudyBasket
                 return "no";
         }
 
-        public string SpecialFeatureByType(string ProductType)
+        /// <summary>
+        /// Метод принимает тип продукта и возвращает название специальной функции заданного типа продукта. 
+        /// </summary>
+        /// <param name="ProductType"></param>
+        /// <returns></returns>
+        public string GetSpecialFeatureByType(string ProductType)
         {
             string feature = null; 
 
@@ -183,5 +194,72 @@ namespace GaidukovPSBstudyBasket
 
             return feature;
         }
+
+        /// <summary>
+        /// Метод принимает количество продуктов, которые нужно сгенерировать и записывает с сгенерированное количество продуктов в списки по категориям.
+        /// </summary>
+        public void GetShopAssortment()
+        {
+            WashingMachines.Clear();
+            Fans.Clear();
+            Microwaves.Clear();
+
+            for (int i = 0; i<NumberOfGeneratedProducts; i++)
+            {
+                WashingMachines.Add(GetRandomProduct(type.washingMachine));
+                Fans.Add(GetRandomProduct(type.fan));
+                Microwaves.Add(GetRandomProduct(type.microwave));
+            }
+        }
+
+        public void SerializeShopAssortment()
+        {
+            SerializeWashingMachines();
+            SerializeFans();
+            SerializeMicrowaves();
+        }
+
+        void SerializeWashingMachines()
+        {
+            string fileName = "WashingMachines.json";
+            string jsonString = JsonSerializer.Serialize(WashingMachines);
+            File.WriteAllText(fileName, jsonString);            
+        }
+
+        void SerializeFans()
+        {
+            string fileName = "Fans.json";
+            string jsonString = JsonSerializer.Serialize(Fans);
+            File.WriteAllText(fileName, jsonString);            
+        }
+
+        void SerializeMicrowaves()
+        {
+            string fileName = "Microwaves.json";
+            string jsonString = JsonSerializer.Serialize(Microwaves);
+            File.WriteAllText(fileName, jsonString);            
+        }
     }
 }
+
+/*
+fileName = "Fans.json";
+jsonString = "";
+
+foreach (ProductGenerator product in Fans)
+{
+    jsonString += JsonSerializer.Serialize(product);
+}
+
+File.WriteAllText(fileName, jsonString);
+
+fileName = "Microwaves.json";
+jsonString = "";
+
+foreach (ProductGenerator product in Microwaves)
+{
+    jsonString += JsonSerializer.Serialize(product);
+}
+
+File.WriteAllText(fileName, jsonString);
+*/
