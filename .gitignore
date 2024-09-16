@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/GaidukovPSBstudyBasket/Orders/order_1.json
+/GaidukovPSBstudyBasket/Orders/order_2.json
+/GaidukovPSBstudyBasket/Orders/order_3.json
+/GaidukovPSBstudyBasket/Orders/order_4.json
+/GaidukovPSBstudyBasket/Orders/order_5.json
+/GaidukovPSBstudyBasket/Orders/order_6.json
+/GaidukovPSBstudyBasket/Orders/order_7.json
+/GaidukovPSBstudyBasket/Orders/order_8.json

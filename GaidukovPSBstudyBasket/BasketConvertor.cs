@@ -95,6 +95,7 @@ namespace GaidukovPSBstudyBasket
                                "3 - сортировка по оценке,\n" +
                                "4 - сортировка по весу,\n" +
                                "5 - сортировка по времени доставки.\n");
+
             bool parced = int.TryParse(logger.ReadMessage(), out int sortingPatternNumber);
 
             if (!parced)

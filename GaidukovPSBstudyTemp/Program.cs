@@ -5,6 +5,9 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 
+
+// File.Exists(path);
+
 /*
 List <int> ints = new List<int>() { 1, 2, 3 };
 

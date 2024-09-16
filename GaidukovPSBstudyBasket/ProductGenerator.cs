@@ -83,7 +83,7 @@ namespace GaidukovPSBstudyBasket
         /// Метод возвращает случайный тип товара.
         /// </summary>
         /// <returns></returns>
-        type GetType()
+        public type GetRandomType()
         {
             int t = random.Next(1, 4);
             return t switch
@@ -196,7 +196,7 @@ namespace GaidukovPSBstudyBasket
         }
 
         /// <summary>
-        /// Метод принимает количество продуктов, которые нужно сгенерировать и записывает с сгенерированное количество продуктов в списки по категориям.
+        /// Метод генерирует по 10 случайных продуктов каждой категории и записывает их в списки по категориям.
         /// </summary>
         public void GetShopAssortment()
         {
@@ -239,27 +239,12 @@ namespace GaidukovPSBstudyBasket
             string jsonString = JsonSerializer.Serialize(Microwaves);
             File.WriteAllText(fileName, jsonString);            
         }
+
+        public void SerializeOrder(List<ProductGenerator> Basket, int orderNumber)
+        {
+            string fileName = MainFunctions.path + "order_" + orderNumber.ToString() + ".json";
+            string jsonString = JsonSerializer.Serialize(Basket);
+            File.WriteAllText(fileName, jsonString);            
+        }
     }
 }
-
-/*
-fileName = "Fans.json";
-jsonString = "";
-
-foreach (ProductGenerator product in Fans)
-{
-    jsonString += JsonSerializer.Serialize(product);
-}
-
-File.WriteAllText(fileName, jsonString);
-
-fileName = "Microwaves.json";
-jsonString = "";
-
-foreach (ProductGenerator product in Microwaves)
-{
-    jsonString += JsonSerializer.Serialize(product);
-}
-
-File.WriteAllText(fileName, jsonString);
-*/
