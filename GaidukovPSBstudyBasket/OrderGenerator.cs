@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class MainFunctions
+    internal class OrderGenerator
     {
         ConsoleLogger logger = new ConsoleLogger();
         ProductGenerator generator = new ProductGenerator();
@@ -34,7 +34,7 @@ namespace GaidukovPSBstudyBasket
         {
             do
             {
-                AddProductToBasket(basket.UsersBasket);
+                AddProductToOrder(basket.UsersBasket);
 
                 logger.SendMessage("\nКорзина:");
                 basket.SellSortedCategoryList(basket.GetSortedProductList(basket.UsersBasket, basket.GetSortingParametr()), basket.UsersBasket.Count());
@@ -51,7 +51,7 @@ namespace GaidukovPSBstudyBasket
             while (OneMoreOrder());
         }
 
-        void AddProductToBasket(List<ProductGenerator> Basket)
+        void AddProductToOrder(List<ProductGenerator> Basket)
         {
             do
             {
@@ -227,6 +227,23 @@ namespace GaidukovPSBstudyBasket
             OrderNumber++;
         }
 
+        public void SaveOrder(List<ProductGenerator> UsersBasket, int orderNumber)
+        {
+
+            while (File.Exists(path + "order_" + OrderNumber.ToString() + ".json"))
+            {
+                //logger.SendMessage("Заказ с таким номером уже существует");
+                OrderNumber++;
+            }
+
+            generator.SerializeOrder(UsersBasket, OrderNumber);
+
+            logger.SendMessage($"Заказ Order_{OrderNumber} успешно сохранен.");
+            UsersBasket.Clear();
+
+            OrderNumber++;
+        }
+
         public bool OneMoreOrder()
         {
             bool makeOneMoreOrder = true;
@@ -325,6 +342,7 @@ namespace GaidukovPSBstudyBasket
         void AddProductToOrder(int orderNum)
         {
             bool exit = true;
+            bool orderIsFound = false;
             List<ProductGenerator> order = new List<ProductGenerator>();
 
             do
@@ -334,6 +352,8 @@ namespace GaidukovPSBstudyBasket
                     fileName = $"{path}order_{orderNum}.json";
                     jsonString = File.ReadAllText(fileName);
                     order = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+
+                    orderIsFound = true;
                     DeleteOrder(orderNum);
                 }
                 else
@@ -342,19 +362,24 @@ namespace GaidukovPSBstudyBasket
                     logger.SendMessage("\nПопробовать еще раз?" +
                                        "\n1 - да" +
                                        "\nEnter - нет");
+
                     if (logger.ReadMessage() == "1")
                         exit = false;
                 }
             }
             while (!exit);
 
-            AddProductToBasket(order);
-            SaveOrder(order);
+            if (orderIsFound)
+            {
+                AddProductToOrder(order);
+                generator.SerializeOrder(order, orderNum);
+            }
         }
 
         void DeleteProductFromOrder(int orderNum)
         {
             bool exit = true;
+            bool orderIsFound = false;
             List<ProductGenerator> order = new List<ProductGenerator>();
 
             do
@@ -364,6 +389,8 @@ namespace GaidukovPSBstudyBasket
                     fileName = $"{path}order_{orderNum}.json";
                     jsonString = File.ReadAllText(fileName);
                     order = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+
+                    orderIsFound = true;
                     DeleteOrder(orderNum);
                 }
                 else
@@ -378,20 +405,24 @@ namespace GaidukovPSBstudyBasket
             }
             while (!exit);
 
-            logger.SendMessage("Введите артикул товара, который хотите удалить:");
-            basket.SellSortedCategoryList(basket.GetSortedProductList(order, 1), order.Count);
-            
-            string removeProductArticle = logger.ReadMessage();
-            
-            foreach (ProductGenerator product in order)
+            if (orderIsFound)
             {
-                if (product.Article == removeProductArticle)
+                logger.SendMessage("Введите артикул товара, который хотите удалить:");
+                basket.SellSortedCategoryList(basket.GetSortedProductList(order, 1), order.Count);
+
+                string removeProductArticle = logger.ReadMessage();
+
+                foreach (ProductGenerator product in order)
                 {
-                    order.Remove(product);
-                    break;
+                    if (product.Article == removeProductArticle)
+                    {
+                        order.Remove(product);
+                        break;
+                    }
                 }
+
+                generator.SerializeOrder(order, orderNum);
             }
-            SaveOrder(order);
         }
 
         void DeleteOrder(int orderNum)

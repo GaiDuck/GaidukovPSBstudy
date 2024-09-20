@@ -15,7 +15,7 @@ internal class Program
     {
         ConsoleLogger logger = new ConsoleLogger();
         ProductGenerator generator = new ProductGenerator();
-        MainFunctions main = new MainFunctions();
+        OrderGenerator order = new OrderGenerator();
 
         bool exit;
 
@@ -36,11 +36,11 @@ internal class Program
             switch (logger.ReadMessage())
             {
                 case "1":
-                    main.CreateUserOrder(); //Заказ, создаваемый пользователем вручную.
+                    order.CreateUserOrder(); //Заказ, создаваемый пользователем вручную.
                     break;
 
                 case "2":
-                    main.CreateRandomOrder();
+                    order.CreateRandomOrder();
                     break;
 
                 case "3":
@@ -69,17 +69,17 @@ internal class Program
                     }
                                         
                     if (mod == null)
-                        main.CreateRandomOrder();
+                        order.CreateRandomOrder();
                     else
-                        main.CreateRandomOrder(mod);
+                        order.CreateRandomOrder(mod);
                     break;
 
                 case "4":
-                    main.ReadOrder(main.SeachForOrders());
+                    order.ReadOrder(order.SeachForOrders());
                     break;
 
                 case "5":
-                    main.EditOrder(main.SeachForOrders());
+                    order.EditOrder(order.SeachForOrders());
                     break;
 
                 default:

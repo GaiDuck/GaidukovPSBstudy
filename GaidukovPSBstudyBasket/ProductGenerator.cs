@@ -242,7 +242,7 @@ namespace GaidukovPSBstudyBasket
 
         public void SerializeOrder(List<ProductGenerator> Basket, int orderNumber)
         {
-            string fileName = MainFunctions.path + "order_" + orderNumber.ToString() + ".json";
+            string fileName = OrderGenerator.path + "order_" + orderNumber.ToString() + ".json";
             string jsonString = JsonSerializer.Serialize(Basket);
             File.WriteAllText(fileName, jsonString);            
         }
