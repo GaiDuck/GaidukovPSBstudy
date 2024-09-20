@@ -65,20 +65,20 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         /// <param name="Produckts"></param>
         /// <param name="userInput"></param>
-        public void GetUsersBasket(List<ProductGenerator> Produckts, string userInput)
+        public void GetBasket(List<ProductGenerator> Produckts, List<ProductGenerator> Basket, string userInput)
         {
-            int userBasketCount = UsersBasket.Count();
+            int BasketCount = Basket.Count();
 
             foreach (ProductGenerator product in Produckts)
             {
                 if (product.Article == userInput)
                 {
-                    UsersBasket.Add(product);
+                    Basket.Add(product);
                     logger.SendMessage("\nТовар успешно добавлен в корзину.\n");
                 }
             }
 
-            if (UsersBasket.Count - userBasketCount <= 0)
+            if (Basket.Count - BasketCount <= 0)
             {
                 logger.SendMessage("\nТакого товара нет.\n");
             }
