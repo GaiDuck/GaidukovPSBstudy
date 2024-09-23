@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
@@ -538,15 +539,23 @@ namespace GaidukovPSBstudyBasket
         {
             List<int> OrderNumbers = new List<int>();
 
-            for (int i = 0; i < 100; i++)
+            string[] OrderNums = Directory.GetFiles(path);
+
+            foreach (string num in OrderNums)
             {
-                if (File.Exists(path + "order_" + i.ToString() + ".json"))
-                {
-                    OrderNumbers.Add(i);
-                }
+                string s = Regex.Replace(num, "[^\d]", "");
+                OrderNumbers.Add(int.Parse(s));
             }
 
             return OrderNumbers;
+        }
+
+        public List<ProductGenerator> DeserializeOrder(string orderNum)
+        {
+            fileName = $"{path}order_{orderNum}.json";
+            jsonString = File.ReadAllText(fileName);
+            List<ProductGenerator> order = JsonSerializer.Deserialize<List<ProductGenerator>>(jsonString);
+            return order;
         }
     }
 }
