@@ -5,6 +5,14 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 
+List<int> nums1 = new List<int>() { 1, 2, 3, 4 };
+List<int> nums2 = new List<int>() { 5, 6, 7, 8 };
+nums1.AddRange(nums2);
+
+foreach (int i in nums1)
+{
+    Console.WriteLine(i);
+}
 
 // File.Exists(path);
 

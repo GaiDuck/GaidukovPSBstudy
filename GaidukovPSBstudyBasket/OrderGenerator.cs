@@ -15,7 +15,12 @@ namespace GaidukovPSBstudyBasket
         BasketConvertor basket = new BasketConvertor();
         Random random = new Random();
 
-        List<ProductGenerator> Product = new List<ProductGenerator>();
+        List<ProductGenerator> ProductList = new List<ProductGenerator>();
+        List<ProductGenerator> OrderList = new List<ProductGenerator>();
+        List<ProductGenerator> ShopAssortmentList = new List<ProductGenerator>();
+        List<ProductGenerator> RelevantShopAssortmentList = new List<ProductGenerator>();
+
+        ProductGenerator currentProduct;
 
         int OrderNumber { get; set; } = 1;
 
@@ -58,16 +63,16 @@ namespace GaidukovPSBstudyBasket
                 do 
                 {
                     logger.SendMessage(LogMessage.ShopCategoryMessage);
-                    Product = GetProductsCategory(logger.ReadMessage());
+                    ProductList = GetProductsCategory(logger.ReadMessage());
                 }
-                while (Product == null);
+                while (ProductList == null);
 
                 productsOnScreenNumber = GetNumberOfProductsOnScreen();
-                basket.SellSortedCategoryList(basket.GetSortedProductList(Product, basket.GetSortingParametr()), productsOnScreenNumber);
+                basket.SellSortedCategoryList(basket.GetSortedProductList(ProductList, basket.GetSortingParametr()), productsOnScreenNumber);
 
                 logger.SendMessage("\nВведите артикул желаемого товара.\n");
 
-                basket.GetBasket(Product, Basket, logger.ReadMessage());
+                basket.GetBasket(ProductList, Basket, logger.ReadMessage());
 
                 logger.SendMessage("\nЖелаете продолжть покупки?" +
                                    "\nДля продолжения нажмите Enter клавишу." +
@@ -131,30 +136,30 @@ namespace GaidukovPSBstudyBasket
 
         public void CreateRandomOrder()
         {
-            List<ProductGenerator> Order = new List<ProductGenerator>();
+            OrderList.Clear();
 
             int orderCount = GetNumberOfRandomOrders();
 
             for (int i = 0; i < orderCount; i++)
             {
                 int orderProductsCount = random.Next(1, 6);
-                Order.Clear();
+                OrderList.Clear();
 
                 for (int j = 0; j < orderProductsCount; j++)
                 {
                     ProductGenerator product = generator.GetRandomProduct(generator.GetRandomType());
-                    Order.Add(product);
+                    OrderList.Add(product);
                 }
 
                 logger.SendMessage("Заказ успешно создан.");
 
-                SaveOrder(Order);
+                SaveOrder(OrderList);
             }
         }
 
         public void CreateRandomOrder(string mod)
         {
-            List<ProductGenerator> Order = new List<ProductGenerator>();
+            OrderList.Clear();
 
             int orderCount = GetNumberOfRandomOrders();
             int sortingParametr = 1;
@@ -177,23 +182,108 @@ namespace GaidukovPSBstudyBasket
             for (int i = 0; i < orderCount; i++)
             {
                 int orderProductsCount = random.Next(1, 6);
-                Order.Clear();
+                OrderList.Clear();
 
                 for (int j = 0; j < orderProductsCount; j++)
                 {
                     string category = random.Next(1, 4).ToString();
                     List<ProductGenerator> Category = basket.GetSortedProductList(GetProductsCategory(category), sortingParametr);
 
-                    Order.Add(Category[0]);
+                    OrderList.Add(Category[0]);
                 }
 
                 logger.SendMessage("Заказ успешно создан.");
 
-                SaveOrder(Order);
+                SaveOrder(OrderList);
             }
         }
 
+        public void GenerateOrderBySumm(double maxSumm)
+        {
+            OrderList.Clear();
 
+            do
+            {
+                GenerateRelevantShopAssortmentBySumm(maxSumm);
+
+                if (RelevantShopAssortmentList.Count == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    currentProduct = RelevantShopAssortmentList[random.Next(0, RelevantShopAssortmentList.Count)];
+                    maxSumm = maxSumm - currentProduct.Cost;
+                    OrderList.Add(currentProduct);
+                }
+            }
+            while (true);
+
+            SaveOrder(OrderList);
+        }
+
+        public void GenerateOrderBySumm(double minSumm, double maxSumm)
+        {
+            OrderList.Clear();
+
+            do
+            {
+                GenerateRelevantShopAssortmentBySumm(maxSumm);
+
+                if (RelevantShopAssortmentList.Count == 0)
+                {
+                    logger.SendMessage("Заданы некорректные рамки стоимости заказа.");
+                    break;
+                }
+                else
+                {
+                    currentProduct = RelevantShopAssortmentList[random.Next(0, RelevantShopAssortmentList.Count)];
+                    maxSumm = maxSumm - currentProduct.Cost;
+                    minSumm = minSumm - currentProduct.Cost;
+                    OrderList.Add(currentProduct);
+                }
+            }
+            while (minSumm > 0);
+
+            SaveOrder(OrderList);
+        }
+
+        public void GenerateOrderByCount(int maxCount)
+        {
+            OrderList.Clear();
+
+            for (int i = 0; i < maxCount; i++)
+            {
+                int orderProductsCount = random.Next(1, 6);
+
+                OrderList.Clear();
+
+                for (int j = 0; j < orderProductsCount; j++)
+                {
+                    string category = random.Next(1, 4).ToString();
+                    List<ProductGenerator> Category = GetProductsCategory(category);
+
+                    OrderList.Add(Category[random.Next(0, Category.Count())]);
+                }
+
+                logger.SendMessage("Заказ успешно создан.");
+
+                SaveOrder(OrderList);
+            }
+        }
+
+        void GenerateRelevantShopAssortmentBySumm(double maxSumm)
+        {
+            RelevantShopAssortmentList.Clear();
+
+            for (int i = 1; i < 4; i++)
+            {
+                RelevantShopAssortmentList.AddRange(GetProductsCategory(i.ToString()).Where(s => s.Cost <= maxSumm));
+            }
+
+            //Удалить потом эту строку, чтобы не засоряла консоль.
+            logger.SendMessage($"\nНайденно удовлетворяющих требованиям продуктов: {RelevantShopAssortmentList.Count}\n");
+        }
 
         int GetNumberOfRandomOrders()
         {
