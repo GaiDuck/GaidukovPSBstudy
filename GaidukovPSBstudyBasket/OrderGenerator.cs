@@ -543,7 +543,7 @@ namespace GaidukovPSBstudyBasket
 
             foreach (string num in OrderNums)
             {
-                string s = Regex.Replace(num, "[^\d]", "");
+                string s = Regex.Replace(num, @"[^\d]", ""); //сразу предупрежу, что будешь везде и всюду пихать regex вместо альтернатив - будешь получать такие ошибки, ну или будь внимательнее и перепроверяй регулярки на ошибки
                 OrderNumbers.Add(int.Parse(s));
             }
 
