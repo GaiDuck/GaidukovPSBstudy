@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,13 +20,38 @@ namespace GaidukovPSBstudyBasket
         OrderGenerator OG = new OrderGenerator();
 
         List<OrderCardsGenerator> orderCardsList = new List<OrderCardsGenerator>();
+        List<OrderCardsGenerator> relevantOrderCardsList = new List<OrderCardsGenerator>();
+
 
         string fileName;
         string jsonString;
 
-        public void GetOrdersChiapperThan(double cost)
+        public List<OrderCardsGenerator> GetOrdersChiapperThan(double cost)
         {
-            
+            relevantOrderCardsList.Clear();
+            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.TotalCost < cost));
+            return relevantOrderCardsList;
+        }
+
+        public List<OrderCardsGenerator> GetOrdersMoreExpensiveThan(double cost)
+        {
+            relevantOrderCardsList.Clear();
+            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.TotalCost > cost));
+            return relevantOrderCardsList;
+        }
+
+        public List<OrderCardsGenerator> GetOrdersSortedByWeight()
+        {
+            relevantOrderCardsList.Clear();
+            relevantOrderCardsList.AddRange(orderCardsList.OrderBy(order => order.TotalWeight));
+            return relevantOrderCardsList;
+        }
+
+        public List<OrderCardsGenerator> GetOrdersByDeliveringDate(int deliveryDays) 
+        {
+            relevantOrderCardsList.Clear();
+            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.DeliveryDays <= deliveryDays).OrderBy(order => order.DeliveryDays));
+            return relevantOrderCardsList;
         }
 
         public void GetOrderCardsList()
@@ -107,16 +133,3 @@ namespace GaidukovPSBstudyBasket
         }
     }
 }
-
-
-/*
-        generatedProduct.Article = GetRandomArticle();
-        generatedProduct.ProductType = GetRandomTitleByType(Type);
-        generatedProduct.Cost = GetRandomCostByType(Type);
-        generatedProduct.Score = GetRandomScore();
-        generatedProduct.Weight = GetRandomWeight(Type);
-        generatedProduct.DeliveryDays = GetRandomDeliveryDays();
-        generatedProduct.SpecialFeature = GetRandomSpecialFeature();
-
-        return generatedProduct;
-*/

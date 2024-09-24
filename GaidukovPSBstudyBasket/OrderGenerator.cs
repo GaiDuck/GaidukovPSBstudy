@@ -543,7 +543,7 @@ namespace GaidukovPSBstudyBasket
 
             foreach (string num in OrderNums)
             {
-                string s = Regex.Replace(num, "[^\d]", "");
+                string s = Regex.Replace(num, @"[^\d]", "");
                 OrderNumbers.Add(int.Parse(s));
             }
 
