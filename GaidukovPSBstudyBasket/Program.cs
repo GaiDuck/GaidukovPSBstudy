@@ -13,7 +13,10 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        ConsoleLogger logger = new ConsoleLogger();
+        ProductFan fan = new ProductFan("Серп и молот", 150, 3.8, 15.1, 25, "есть, ещё какой");
+        var pg = (ProductGenerator)fan;
+        pg.GetRandomProduct(type.fan);
+        ConsoleLogger logger = new ConsoleLogger(); // убрать дубли классов Logger, ConsoleLogger и привести всё к одному классу и интерфейсу ILogger
         ProductGenerator generator = new ProductGenerator();
         OrderGenerator order = new OrderGenerator();
 
@@ -24,7 +27,7 @@ internal class Program
 
         do
         {
-            logger.SendMessage(LogMessage.GreetingMassegeForShopMessage);
+            logger.SendMessage(BasketMessages.GreetingMassegeForShopMessage);
             logger.SendMessage("\nВыберите режим:" +
                                "\n1 - Создать новый заказ вручную;" +
                                "\n2 - Создать случайно сгенерированный заказ;" +

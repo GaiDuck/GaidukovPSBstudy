@@ -9,8 +9,8 @@ namespace GaidukovPSBstudyBasket
 {
     internal class BasketConvertor
     {
-        ProductGenerator prod = new ProductGenerator();
-        ConsoleLogger logger = new ConsoleLogger();
+        ProductGenerator prod = new ProductGenerator(); // если статика - убрать вообще, если динамика - прокидывать через конструктор
+        ConsoleLogger logger = new ConsoleLogger();//то же, что с остальными логгерами
 
         List<string> category = new List<string>();
         public List<ProductGenerator> UsersBasket = new List<ProductGenerator>();
@@ -67,7 +67,7 @@ namespace GaidukovPSBstudyBasket
         /// <param name="userInput"></param>
         public void GetBasket(List<ProductGenerator> Produckts, List<ProductGenerator> Basket, string userInput)
         {
-            int BasketCount = Basket.Count();
+            int BasketCount = Basket.Count;
 
             foreach (ProductGenerator product in Produckts)
             {
@@ -78,7 +78,7 @@ namespace GaidukovPSBstudyBasket
                 }
             }
 
-            if (Basket.Count - BasketCount <= 0)
+            if (Basket.Count <= BasketCount)
             {
                 logger.SendMessage("\nТакого товара нет.\n");
             }

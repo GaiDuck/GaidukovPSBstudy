@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
+    public static class BasketMessages
+    {
+        public readonly static string GreetingMessage = "Добро пожаловать в Калькулятор!" +
+                                              "\nМой калькулятор может выполнять следующие операции: " +
+                                              "\nСложение: + " +
+                                              "\nВычитание: - " +
+                                              "\nУмножение: * " +
+                                              "\nДеление: / " +
+                                              "\nВозведение в степень: ^" +
+                                              "\nТак же он может искать максимальное и минимально значение в массиве." +
+                                              "\n\nВыберите режим работы:";
+
+        public readonly static string GreetingMassegeForShopMessage = "Добро пожаловать в магазин бытовой техники!" +
+                                                            "\nУ нас вы найдете лучшие стиральные машины, микроволновые печи и фены.\n";
+    }
     public enum LogMessage
     {
         GreetingMassege,

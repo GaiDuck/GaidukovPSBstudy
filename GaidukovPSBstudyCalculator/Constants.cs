@@ -9,7 +9,7 @@ namespace GaidukovPSBstudyCalculator
     /// <summary>
     /// Класс, содержащий методы, которые не влияют на прямой функционал программы.
     /// </summary>
-    internal static class Constants 
+    public static class Constants 
     {      
         /// <summary>
         /// Множество всех цифр и запятая, используемая для отделения дробной части от целой.

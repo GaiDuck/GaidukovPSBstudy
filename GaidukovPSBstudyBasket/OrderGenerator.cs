@@ -6,15 +6,16 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using C = GaidukovPSBstudyCalculator.Constants; // пример ссылок на статические классы
 
 namespace GaidukovPSBstudyBasket
 {
     internal class OrderGenerator
     {
-        ConsoleLogger logger = new ConsoleLogger();
-        ProductGenerator generator = new ProductGenerator();
+        ConsoleLogger logger = new ConsoleLogger(); //Привести к интерфейсу после упразнения дубля
+        ProductGenerator generator = new ProductGenerator(); //?? класс станет абстрактным, или обратиться к статическому?
         BasketConvertor basket = new BasketConvertor();
-        Random random = new Random();
+        private static Random random = new Random();
 
         List<ProductGenerator> ProductList = new List<ProductGenerator>();
         List<ProductGenerator> OrderList = new List<ProductGenerator>();
@@ -22,7 +23,6 @@ namespace GaidukovPSBstudyBasket
         List<ProductGenerator> RelevantShopAssortmentList = new List<ProductGenerator>();
 
         ProductGenerator currentProduct;
-
         int OrderNumber { get; set; } = 1;
 
         bool exit;

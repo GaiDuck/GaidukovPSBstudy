@@ -8,29 +8,32 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class ProductGenerator
+    internal class ProductGenerator //сделать абстрактным после вынесения генератора
     {
-        Random random = new Random();
+        private static Random random { get; } = new Random(); // Это для генератора
 
+        //Свойства для моделей продуктов - наследуется именно эта часть
         public string Article { get; set; }
         public string ProductType { get; set; }
         public double Cost { get; set; }
         public double Score { get; set; }
         public double Weight { get; set; }
         public int DeliveryDays { get; set; }
-        public string SpecialFeature { get; set; }
+        public string SpecialFeature { get; set; } //сделать bool? Если нельзя, то написать коммент, почему
+
+
         public static int NumberOfGeneratedProducts { get; set; } = 10;
 
+        //Хранение ещё один отдельный класс
         List<ProductGenerator> WashingMachines = new List<ProductGenerator>();
         List<ProductGenerator> Fans = new List<ProductGenerator>();
         List<ProductGenerator> Microwaves = new List<ProductGenerator>();
 
         List <string> UsedArticles = new List <string> ();
 
-        public ProductGenerator GetRandomProduct(type Type)
+        public ProductGenerator GetRandomProduct(type Type) //Всю логику генерации перенести на отдельный класс
         {
             ProductGenerator generatedProduct = new ProductGenerator ();
-
             generatedProduct.Article = GetRandomArticle();
             generatedProduct.ProductType = GetRandomTitleByType(Type);
             generatedProduct.Cost = GetRandomCostByType(Type);
@@ -103,7 +106,10 @@ namespace GaidukovPSBstudyBasket
                 type.microwave => "Микроволновая печь"
             };
         }
-
+        public virtual string GetTitle()
+        {
+            return "Product";
+        }
         /// <summary>
         /// Метод возвращает случайную стоимость товара, в зависимости от типа.
         /// </summary>

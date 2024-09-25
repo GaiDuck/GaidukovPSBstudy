@@ -5,9 +5,12 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaidukovPSBstudyCalculator", "GaidukovPSBstudyCalculator\GaidukovPSBstudyCalculator.csproj", "{BD60AB6B-CF3B-4295-A6CD-5A0A70D4220A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaidukovPSBstudyBasket", "GaidukovPSBstudyBasket\GaidukovPSBstudyBasket.csproj", "{3F080AAE-48CF-4A03-B1BF-FAE4D999DF80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaidukovPSBstudyBasket", "GaidukovPSBstudyBasket\GaidukovPSBstudyBasket.csproj", "{3F080AAE-48CF-4A03-B1BF-FAE4D999DF80}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD60AB6B-CF3B-4295-A6CD-5A0A70D4220A} = {BD60AB6B-CF3B-4295-A6CD-5A0A70D4220A}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GaidukovPSBstudyTemp", "GaidukovPSBstudyTemp\GaidukovPSBstudyTemp.csproj", "{BF95BB34-D99A-4F96-8236-AF7C18D83F53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GaidukovPSBstudyTemp", "GaidukovPSBstudyTemp\GaidukovPSBstudyTemp.csproj", "{BF95BB34-D99A-4F96-8236-AF7C18D83F53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
