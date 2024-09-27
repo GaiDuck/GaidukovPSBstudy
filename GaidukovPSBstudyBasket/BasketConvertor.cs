@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GaidukovPSBstudyCalculator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,19 +10,31 @@ namespace GaidukovPSBstudyBasket
 {
     internal class BasketConvertor
     {
-        ProductGenerator prod = new ProductGenerator(); // если статика - убрать вообще, если динамика - прокидывать через конструктор
+        ProductsGenerator generator = new ProductsGenerator(); // если статика - убрать вообще, если динамика - прокидывать через конструктор
         ConsoleLogger logger = new ConsoleLogger();//то же, что с остальными логгерами
 
         List<string> category = new List<string>();
-        public List<ProductGenerator> UsersBasket = new List<ProductGenerator>();
+        public List<ProductsModel> UsersBasket = new List<ProductsModel>();
+
+        ILogger Logger { get; set; }
+
+        internal BasketConvertor() : this(new ConsoleLogger())
+        {
+
+        }
+
+        public BasketConvertor(ILogger logger)
+        {
+            Logger = logger;
+        }
 
         /// <summary>
         /// метод принимает список продуктов одной категории и параметр, покотому сортируется товар, затем сортирует товары в соответствии с параметром. 
         /// </summary>
         /// <param name="Produckts"></param>
-        public List<ProductGenerator> GetSortedProductList(List<ProductGenerator> Produckts, int sortingPattern)
+        public List<ProductsModel> GetSortedProductList(List<ProductsModel> Produckts, int sortingPattern)
         {
-            List <ProductGenerator> product = new List <ProductGenerator>();
+            List <ProductsModel> product = new List <ProductsModel>();
             
             switch (sortingPattern)
             {
@@ -51,12 +64,12 @@ namespace GaidukovPSBstudyBasket
         /// <summary>
         /// Метод выписывает список товаров с характеристиками из категории в соответствии с отсортированным списком артикулов. 
         /// </summary>
-        public void SellSortedCategoryList(List<ProductGenerator> product, int productsOnScreenNumber)
+        public void SellSortedCategoryList(List<ProductsModel> product, int productsOnScreenNumber)
         {
             for (int i = 0; i < productsOnScreenNumber; i++)
             {
                 logger.SendMessage($"\nАртикул: {product[i].Article} \nТип товара: {product[i].ProductType} \nЦена: {Math.Round(product[i].Cost, 2)} \nОценка: {Math.Round(product[i].Score, 2)} \nВес: {Math.Round(product[i].Weight, 1)} " +
-                                   $"\nДней до доставки: {product[i].DeliveryDays} \n{prod.GetSpecialFeatureByType(product[i].ProductType)}: {product[i].SpecialFeature}");
+                                   $"\nДней до доставки: {product[i].DeliveryDays} \n{generator.GetSpecialFeatureByType(product[i].ProductType)}: {product[i].SpecialFeature}");
             }
         }
 
@@ -65,11 +78,11 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         /// <param name="Produckts"></param>
         /// <param name="userInput"></param>
-        public void GetBasket(List<ProductGenerator> Produckts, List<ProductGenerator> Basket, string userInput)
+        public void GetBasket(List<ProductsModel> Produckts, List<ProductsModel> Basket, string userInput)
         {
             int BasketCount = Basket.Count;
 
-            foreach (ProductGenerator product in Produckts)
+            foreach (ProductsModel product in Produckts)
             {
                 if (product.Article == userInput)
                 {

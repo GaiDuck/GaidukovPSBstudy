@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class ProductWashingMachine : ProductGenerator
+    internal class Product_WashingMachine : ProductsModel
     {
-        public ProductWashingMachine(string article, double cost, double score, double weight, int deliveryDays, string dryer)
+        public Product_WashingMachine(string article, double cost, double score, double weight, int deliveryDays, string dryer)
         {
             Article = article;
             ProductType = "Стиральная машина";
@@ -18,6 +18,7 @@ namespace GaidukovPSBstudyBasket
             DeliveryDays = deliveryDays;
             SpecialFeature = dryer;
         }
+
 /*
         public static ProductWashingMachine Bosh => new ProductWashingMachine("Bosh", 20000, 4.9, 55, 1, "есть");
         public static ProductWashingMachine Ural => new("Ural", 14000, 3.8, 45, 3, "нет");

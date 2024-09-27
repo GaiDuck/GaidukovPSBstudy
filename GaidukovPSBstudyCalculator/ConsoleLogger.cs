@@ -24,6 +24,11 @@ namespace GaidukovPSBstudyCalculator
             Console.WriteLine(LoggerMessage(m));
         }
 
+        public void SendMessage(string str)
+        {
+            Console.WriteLine(str);
+        }
+
         public void LogResult(LogMessage m, double result)
         {
             string message = LoggerMessage(m) + result.ToString();

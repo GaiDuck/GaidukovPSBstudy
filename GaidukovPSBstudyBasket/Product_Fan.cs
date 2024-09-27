@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class ProductFan : ProductGenerator
+    internal class Product_Fan : ProductsModel
     {
         public bool TurboMod { get; set; }
 
-        public ProductFan(string article, double cost, double score, double weight, int deliveryDays, string turboMod)
+        public Product_Fan(string article, double cost, double score, double weight, int deliveryDays, string turboMod)
         {
             Article = article;
             ProductType = "Фен";

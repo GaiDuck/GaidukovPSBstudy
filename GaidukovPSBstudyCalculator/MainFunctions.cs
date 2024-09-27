@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
 {           
-        enum CalculatorMod
-        {
-            GetFirstNumber,
-            GetSecondNumber,
-            GetMathOperator
-        }
+    enum CalculatorMod
+    {
+        GetFirstNumber,
+        GetSecondNumber,
+        GetMathOperator
+    }
     
     /// <summary>
     /// Класс, исполняющий основные сценарии использования приложения

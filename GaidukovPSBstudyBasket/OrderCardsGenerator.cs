@@ -11,79 +11,43 @@ namespace GaidukovPSBstudyBasket
 {
     internal class OrderCardsGenerator
     {
-        public string Article { get; set; }
-        public double TotalCost { get; set; }
-        public double AverageScore { get; set; }
-        public double TotalWeight { get; set; }
-        public int DeliveryDays { get; set; }
-
-        OrderGenerator OG = new OrderGenerator();
-
-        List<OrderCardsGenerator> orderCardsList = new List<OrderCardsGenerator>();
-        List<OrderCardsGenerator> relevantOrderCardsList = new List<OrderCardsGenerator>();
-
+        OrderGenerator order = new OrderGenerator();
 
         string fileName;
         string jsonString;
 
-        public List<OrderCardsGenerator> GetOrdersChiapperThan(double cost)
-        {
-            relevantOrderCardsList.Clear();
-            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.TotalCost < cost));
-            return relevantOrderCardsList;
-        }
-
-        public List<OrderCardsGenerator> GetOrdersMoreExpensiveThan(double cost)
-        {
-            relevantOrderCardsList.Clear();
-            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.TotalCost > cost));
-            return relevantOrderCardsList;
-        }
-
-        public List<OrderCardsGenerator> GetOrdersSortedByWeight()
-        {
-            relevantOrderCardsList.Clear();
-            relevantOrderCardsList.AddRange(orderCardsList.OrderBy(order => order.TotalWeight));
-            return relevantOrderCardsList;
-        }
-
-        public List<OrderCardsGenerator> GetOrdersByDeliveringDate(int deliveryDays) 
-        {
-            relevantOrderCardsList.Clear();
-            relevantOrderCardsList.AddRange(orderCardsList.Where(order => order.DeliveryDays <= deliveryDays).OrderBy(order => order.DeliveryDays));
-            return relevantOrderCardsList;
-        }
-
         public void GetOrderCardsList()
         {
-            orderCardsList.Clear();
+            OrdersDataBase.orderCardsList.Clear();
+            
+            List<int> OrderNumbers = order.SeachForOrders();
 
-            foreach (int num in OG.SeachForOrders())
+            foreach (int num in OrderNumbers)
             {
-                orderCardsList.Add(GetOrderCard(num));
+                OrdersDataBase.orderCardsList.Add(GetOrderCard(num));
             }
         }
 
-        OrderCardsGenerator GetOrderCard(int num)
+        OrderCardModel GetOrderCard(int num)
         {
-            OrderCardsGenerator OrderCard = new OrderCardsGenerator();
+            OrderCardModel OrderCard = new OrderCardModel();
 
-            List<ProductGenerator> order = OG.DeserializeOrder(num.ToString());
+            List<ProductsModel> tempOrder = order.DeserializeOrder(num.ToString());
 
             OrderCard.Article = $"order_{num}";
-            OrderCard.TotalCost = GetTotalCost(order);
-            OrderCard.AverageScore = GetAverageScore(order);
-            OrderCard.TotalWeight = GetTotalWeight(order);
-            OrderCard.DeliveryDays = GetDeliveryDays(order);
+            OrderCard.TotalCost = GetTotalCost(tempOrder);
+            OrderCard.AverageScore = GetAverageScore(tempOrder);
+            OrderCard.TotalWeight = GetTotalWeight(tempOrder);
+            OrderCard.DeliveryDays = GetDeliveryDays(tempOrder);
 
             return OrderCard;
         }
 
-        double GetTotalCost(List<ProductGenerator> order) 
+        double GetTotalCost(List<ProductsModel> order) 
         {
             double totalCost = 0;
 
-            foreach (ProductGenerator product in order)
+            foreach (ProductsModel product in order)
             {
                 totalCost += product.Cost;
             }
@@ -91,12 +55,12 @@ namespace GaidukovPSBstudyBasket
             return totalCost;
         }
 
-        double GetAverageScore(List<ProductGenerator> order)
+        double GetAverageScore(List<ProductsModel> order)
         {
             double score = 0;
             int i = 0;
 
-            foreach (ProductGenerator product in order)
+            foreach (ProductsModel product in order)
             {
                 score += product.Score;
                 i++;
@@ -107,11 +71,11 @@ namespace GaidukovPSBstudyBasket
             return score;
         }
 
-        double GetTotalWeight(List<ProductGenerator> order)
+        double GetTotalWeight(List<ProductsModel> order)
         {
             double totalCosWeight = 0;
 
-            foreach (ProductGenerator product in order)
+            foreach (ProductsModel product in order)
             {
                 totalCosWeight += product.Weight;
             }
@@ -119,11 +83,11 @@ namespace GaidukovPSBstudyBasket
             return totalCosWeight;
         }
 
-        int GetDeliveryDays(List<ProductGenerator> order)
+        int GetDeliveryDays(List<ProductsModel> order)
         {
             int deliveryDays = 0;
 
-            foreach (ProductGenerator product in order)
+            foreach (ProductsModel product in order)
             {
                 if (product.DeliveryDays > deliveryDays) 
                     deliveryDays = product.DeliveryDays;
@@ -131,5 +95,34 @@ namespace GaidukovPSBstudyBasket
 
             return deliveryDays;
         }
+
+       public List<OrderCardModel> GetOrdersChiapperThan(double cost)
+        {
+            OrdersDataBase.relevantOrderCardsList.Clear();
+            OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.Where(order => order.TotalCost < cost));
+            return OrdersDataBase.relevantOrderCardsList;
+        }
+
+        public List<OrderCardModel> GetOrdersMoreExpensiveThan(double cost)
+        {
+            OrdersDataBase.relevantOrderCardsList.Clear();
+            OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.Where(order => order.TotalCost > cost));
+            return OrdersDataBase.relevantOrderCardsList;
+        }
+
+        public List<OrderCardModel> GetOrdersSortedByWeight()
+        {
+            OrdersDataBase.relevantOrderCardsList.Clear();
+            OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.OrderBy(order => order.TotalWeight));
+            return OrdersDataBase.relevantOrderCardsList;
+        }
+
+        public List<OrderCardModel>OrdersByDeliveringDate(int deliveryDays)
+        {
+            OrdersDataBase.relevantOrderCardsList.Clear();
+            OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.Where(order => order.DeliveryDays <= deliveryDays).OrderBy(order => order.DeliveryDays));
+            return OrdersDataBase.relevantOrderCardsList;
+        }
+
     }
 }

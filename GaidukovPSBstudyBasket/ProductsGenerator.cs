@@ -8,32 +8,17 @@ using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyBasket
 {
-    internal class ProductGenerator //сделать абстрактным после вынесения генератора
+    internal class ProductsGenerator 
     {
         private static Random random { get; } = new Random(); // Это для генератора
 
-        //Свойства для моделей продуктов - наследуется именно эта часть
-        public string Article { get; set; }
-        public string ProductType { get; set; }
-        public double Cost { get; set; }
-        public double Score { get; set; }
-        public double Weight { get; set; }
-        public int DeliveryDays { get; set; }
-        public string SpecialFeature { get; set; } //сделать bool? Если нельзя, то написать коммент, почему
-
-
         public static int NumberOfGeneratedProducts { get; set; } = 10;
-
-        //Хранение ещё один отдельный класс
-        List<ProductGenerator> WashingMachines = new List<ProductGenerator>();
-        List<ProductGenerator> Fans = new List<ProductGenerator>();
-        List<ProductGenerator> Microwaves = new List<ProductGenerator>();
 
         List <string> UsedArticles = new List <string> ();
 
-        public ProductGenerator GetRandomProduct(type Type) //Всю логику генерации перенести на отдельный класс
+        public ProductsModel GetRandomProduct(type Type) 
         {
-            ProductGenerator generatedProduct = new ProductGenerator ();
+            ProductsModel generatedProduct = new ProductsModel ();
             generatedProduct.Article = GetRandomArticle();
             generatedProduct.ProductType = GetRandomTitleByType(Type);
             generatedProduct.Cost = GetRandomCostByType(Type);
@@ -206,15 +191,15 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         public void GetShopAssortment()
         {
-            WashingMachines.Clear();
-            Fans.Clear();
-            Microwaves.Clear();
+            ProductsDataBase.WashingMachines.Clear();
+            ProductsDataBase.Fans.Clear();
+            ProductsDataBase.Microwaves.Clear();
 
             for (int i = 0; i<NumberOfGeneratedProducts; i++)
             {
-                WashingMachines.Add(GetRandomProduct(type.washingMachine));
-                Fans.Add(GetRandomProduct(type.fan));
-                Microwaves.Add(GetRandomProduct(type.microwave));
+                ProductsDataBase.WashingMachines.Add(GetRandomProduct(type.washingMachine));
+                ProductsDataBase.Fans.Add(GetRandomProduct(type.fan));
+                ProductsDataBase.Microwaves.Add(GetRandomProduct(type.microwave));
             }
         }
 
@@ -228,25 +213,25 @@ namespace GaidukovPSBstudyBasket
         void SerializeWashingMachines()
         {
             string fileName = "WashingMachines.json";
-            string jsonString = JsonSerializer.Serialize(WashingMachines);
+            string jsonString = JsonSerializer.Serialize(ProductsDataBase.WashingMachines);
             File.WriteAllText(fileName, jsonString);            
         }
 
         void SerializeFans()
         {
             string fileName = "Fans.json";
-            string jsonString = JsonSerializer.Serialize(Fans);
+            string jsonString = JsonSerializer.Serialize(ProductsDataBase.Fans);
             File.WriteAllText(fileName, jsonString);            
         }
 
         void SerializeMicrowaves()
         {
             string fileName = "Microwaves.json";
-            string jsonString = JsonSerializer.Serialize(Microwaves);
+            string jsonString = JsonSerializer.Serialize(ProductsDataBase.Microwaves);
             File.WriteAllText(fileName, jsonString);            
         }
 
-        public void SerializeOrder(List<ProductGenerator> Basket, int orderNumber)
+        public void SerializeOrder(List<ProductsModel> Basket, int orderNumber)
         {
             string fileName = OrderGenerator.path + "order_" + orderNumber.ToString() + ".json";
             string jsonString = JsonSerializer.Serialize(Basket);
