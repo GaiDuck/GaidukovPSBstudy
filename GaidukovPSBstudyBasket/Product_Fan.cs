@@ -8,8 +8,6 @@ namespace GaidukovPSBstudyBasket
 {
     internal class Product_Fan : ProductsModel
     {
-        public bool TurboMod { get; set; }
-
         public Product_Fan(string article, double cost, double score, double weight, int deliveryDays, string turboMod)
         {
             Article = article;

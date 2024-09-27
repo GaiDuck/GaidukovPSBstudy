@@ -13,9 +13,6 @@ namespace GaidukovPSBstudyBasket
 {
     internal class OrderGenerator
     {
-        //ConsoleLogger logger = new ConsoleLogger(); //Привести к интерфейсу после упразнения дубля
-
-
         ProductsGenerator generator = new ProductsGenerator(); //?? класс станет абстрактным, или обратиться к статическому? - не понял, что здесь надо сделать статическим или абстрактным и зачем
         BasketConvertor basket = new BasketConvertor();
         private static Random random = new Random();

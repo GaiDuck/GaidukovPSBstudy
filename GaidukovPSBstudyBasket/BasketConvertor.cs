@@ -11,7 +11,6 @@ namespace GaidukovPSBstudyBasket
     internal class BasketConvertor
     {
         ProductsGenerator generator = new ProductsGenerator(); // если статика - убрать вообще, если динамика - прокидывать через конструктор
-        ConsoleLogger logger = new ConsoleLogger();//то же, что с остальными логгерами
 
         List<string> category = new List<string>();
         public List<ProductsModel> UsersBasket = new List<ProductsModel>();
@@ -27,6 +26,7 @@ namespace GaidukovPSBstudyBasket
         {
             Logger = logger;
         }
+
 
         /// <summary>
         /// метод принимает список продуктов одной категории и параметр, покотому сортируется товар, затем сортирует товары в соответствии с параметром. 
@@ -68,7 +68,7 @@ namespace GaidukovPSBstudyBasket
         {
             for (int i = 0; i < productsOnScreenNumber; i++)
             {
-                logger.SendMessage($"\nАртикул: {product[i].Article} \nТип товара: {product[i].ProductType} \nЦена: {Math.Round(product[i].Cost, 2)} \nОценка: {Math.Round(product[i].Score, 2)} \nВес: {Math.Round(product[i].Weight, 1)} " +
+                Logger.SendMessage($"\nАртикул: {product[i].Article} \nТип товара: {product[i].ProductType} \nЦена: {Math.Round(product[i].Cost, 2)} \nОценка: {Math.Round(product[i].Score, 2)} \nВес: {Math.Round(product[i].Weight, 1)} " +
                                    $"\nДней до доставки: {product[i].DeliveryDays} \n{generator.GetSpecialFeatureByType(product[i].ProductType)}: {product[i].SpecialFeature}");
             }
         }
@@ -87,13 +87,13 @@ namespace GaidukovPSBstudyBasket
                 if (product.Article == userInput)
                 {
                     Basket.Add(product);
-                    logger.SendMessage("\nТовар успешно добавлен в корзину.\n");
+                    Logger.SendMessage("\nТовар успешно добавлен в корзину.\n");
                 }
             }
 
             if (Basket.Count <= BasketCount)
             {
-                logger.SendMessage("\nТакого товара нет.\n");
+                Logger.SendMessage("\nТакого товара нет.\n");
             }
         }
 
@@ -102,19 +102,19 @@ namespace GaidukovPSBstudyBasket
         /// </summary>
         public int GetSortingParametr()
         {
-            logger.SendMessage("\nОпределите параметр сортировки:\n" +
+            Logger.SendMessage("\nОпределите параметр сортировки:\n" +
                                "1 - сортировка по названию,\n" +
                                "2 - сортировка по стоимости,\n" +
                                "3 - сортировка по оценке,\n" +
                                "4 - сортировка по весу,\n" +
                                "5 - сортировка по времени доставки.\n");
 
-            bool parced = int.TryParse(logger.ReadMessage(), out int sortingPatternNumber);
+            bool parced = int.TryParse(Logger.ReadMessage(), out int sortingPatternNumber);
 
             if (!parced)
             {
-                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
-                logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
+                Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                Logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
                 sortingPatternNumber = 1;
             }
             return sortingPatternNumber;

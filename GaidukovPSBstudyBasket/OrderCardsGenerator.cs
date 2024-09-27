@@ -117,7 +117,7 @@ namespace GaidukovPSBstudyBasket
             return OrdersDataBase.relevantOrderCardsList;
         }
 
-        public List<OrderCardModel>OrdersByDeliveringDate(int deliveryDays)
+        public List<OrderCardModel> GetOrdersByDeliveringDate(int deliveryDays)
         {
             OrdersDataBase.relevantOrderCardsList.Clear();
             OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.Where(order => order.DeliveryDays <= deliveryDays).OrderBy(order => order.DeliveryDays));

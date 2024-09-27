@@ -101,16 +101,16 @@ internal class Program
                                        "\n2 - дороже заданной стоимости," +
                                        "\n3 - отсортированные по весу," +
                                        "\n4 - по времени доставки.");
-/*                    switch (logger.ReadMessage())
+                    switch (logger.ReadMessage())
                     {
                         case "1":
                             logger.SendMessage("Введите максимальную стоимость: ");
-                            orderCards.GetOrdersChiapperThan(double.Parse(logger.ReadMessage));
+                            orderCards.GetOrdersChiapperThan(double.Parse(logger.ReadMessage()));
                             break;
 
                         case "2":
                             logger.SendMessage("Введите минимальную стоимость: ");
-                            orderCards.GetOrdersMoreExpensiveThan(double.Parse(logger.ReadMessage));
+                            orderCards.GetOrdersMoreExpensiveThan(double.Parse(logger.ReadMessage()));
                             break;
 
                         case "3":
@@ -119,12 +119,12 @@ internal class Program
 
                         case "4":
                             logger.SendMessage("Введите максимальное время доставки: ");
-                            orderCards.GetOrdersByDeliveringDate(int.Parse(logger.ReadMessage));
+                            orderCards.GetOrdersByDeliveringDate(int.Parse(logger.ReadMessage()));
                             break;
 
                         default:
                             break;
-                    }*/
+                    }
                     break;
 
                 default:

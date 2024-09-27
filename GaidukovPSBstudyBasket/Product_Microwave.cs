@@ -8,8 +8,6 @@ namespace GaidukovPSBstudyBasket
 {
     internal class Product_Microwave : ProductsModel
     {
-        public bool Defrosting { get; set; }
-
         public Product_Microwave(string article, double cost, double score, double weight, int deliveryDays, string defrosting)
         {
             Article = article;
