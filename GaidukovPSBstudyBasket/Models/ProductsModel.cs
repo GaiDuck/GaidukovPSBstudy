@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.Models
 {
-    internal class ProductsModel //сделать абстрактным после вынесения генератора - не получается, мне необходимо иметь возможность создавать экземпляры этого класса.
+    internal class ProductsModel
     {
-        //Свойства для моделей продуктов - наследуется именно эта часть
         public string Article { get; set; }
         public string ProductType { get; set; }
         public double Cost { get; set; }

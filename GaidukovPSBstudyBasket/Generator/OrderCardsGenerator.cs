@@ -6,8 +6,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GaidukovPSBstudyBasket.DataBase;
+using GaidukovPSBstudyBasket.Models;
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.Generator
 {
     internal class OrderCardsGenerator
     {
@@ -19,7 +21,7 @@ namespace GaidukovPSBstudyBasket
         public void GetOrderCardsList()
         {
             OrdersDataBase.orderCardsList.Clear();
-            
+
             List<int> OrderNumbers = order.SeachForOrders();
 
             foreach (int num in OrderNumbers)
@@ -43,7 +45,7 @@ namespace GaidukovPSBstudyBasket
             return OrderCard;
         }
 
-        double GetTotalCost(List<ProductsModel> order) 
+        double GetTotalCost(List<ProductsModel> order)
         {
             double totalCost = 0;
 
@@ -89,14 +91,14 @@ namespace GaidukovPSBstudyBasket
 
             foreach (ProductsModel product in order)
             {
-                if (product.DeliveryDays > deliveryDays) 
+                if (product.DeliveryDays > deliveryDays)
                     deliveryDays = product.DeliveryDays;
             }
 
             return deliveryDays;
         }
 
-       public List<OrderCardModel> GetOrdersChiapperThan(double cost)
+        public List<OrderCardModel> GetOrdersChiapperThan(double cost)
         {
             OrdersDataBase.relevantOrderCardsList.Clear();
             OrdersDataBase.relevantOrderCardsList.AddRange(OrdersDataBase.orderCardsList.Where(order => order.TotalCost < cost));

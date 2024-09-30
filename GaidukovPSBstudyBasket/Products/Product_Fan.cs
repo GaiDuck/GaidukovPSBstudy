@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GaidukovPSBstudyBasket.Models;
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.Products
 {
     internal class Product_Fan : ProductsModel
     {
@@ -18,10 +19,5 @@ namespace GaidukovPSBstudyBasket
             DeliveryDays = deliveryDays;
             SpecialFeature = turboMod;
         }
-/*
-        public static ProductFan Dyson => new("Dyson", 8000, 3.9, 0.2, 7, "есть");
-        public static ProductFan Veterok => new("Veterok", 1500, 4.3, 0.35, 0, "нет");
-        public static ProductFan Tuvio => new("Tuvio", 2400, 4.6, 0.15, 2, "нет");
-*/
     }
 }

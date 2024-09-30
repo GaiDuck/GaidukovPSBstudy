@@ -1,4 +1,5 @@
-﻿using GaidukovPSBstudyBasket;
+﻿using GaidukovPSBstudyBasket.Generator;
+using GaidukovPSBstudyBasket.Models;
 using GaidukovPSBstudyCalculator;
 using System.Reflection.Emit;
 using System.Text.Json;
@@ -15,12 +16,6 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-/*
-        ProductFan fan = new ProductFan("Серп и молот", 150, 3.8, 15.1, 25, "есть, ещё какой");
-        var pg = (ProductGenerator)fan;
-        pg.GetRandomProduct(type.fan);
-*/
-
         ConsoleLogger logger = new ConsoleLogger(); 
         ProductsGenerator generator = new ProductsGenerator();
         OrderGenerator order = new OrderGenerator();

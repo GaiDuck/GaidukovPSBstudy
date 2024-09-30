@@ -1,4 +1,5 @@
-﻿using GaidukovPSBstudyBasket;
+﻿using GaidukovPSBstudyBasket.DataBase;
+using GaidukovPSBstudyBasket.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,30 +7,30 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.Generator
 {
-    internal class ProductsGenerator 
+    internal class ProductsGenerator
     {
-        private static Random random { get; } = new Random(); // Это для генератора
+        private static Random random { get; } = new Random();
 
         public static int NumberOfGeneratedProducts { get; set; } = 10;
 
-        List <string> UsedArticles = new List <string> ();
+        List<string> UsedArticles = new List<string>();
 
-        public ProductsModel GetRandomProduct(type Type) 
+        public ProductsModel GetRandomProduct(type Type)
         {
-            ProductsModel generatedProduct = new ProductsModel ();
+            ProductsModel generatedProduct = new ProductsModel();
             generatedProduct.Article = GetRandomArticle();
             generatedProduct.ProductType = GetRandomTitleByType(Type);
             generatedProduct.Cost = GetRandomCostByType(Type);
             generatedProduct.Score = GetRandomScore();
             generatedProduct.Weight = GetRandomWeight(Type);
-            generatedProduct.DeliveryDays = GetRandomDeliveryDays(); 
+            generatedProduct.DeliveryDays = GetRandomDeliveryDays();
             generatedProduct.SpecialFeature = GetRandomSpecialFeature();
 
             return generatedProduct;
         }
-        
+
         /// <summary>
         /// Метод создает случайный артикул, состоящий из 3х букв и 4х цифр, затем проверяет артикул на уникальность, 
         /// записывает сгенеренный артикул в список артикулов и возвращает его.
@@ -61,7 +62,7 @@ namespace GaidukovPSBstudyBasket
                     UsedArticles.Add(s);
                     stop = true;
                 }
-            } 
+            }
             while (!stop);
 
             return s;
@@ -91,10 +92,7 @@ namespace GaidukovPSBstudyBasket
                 type.microwave => "Микроволновая печь"
             };
         }
-        public virtual string GetTitle()
-        {
-            return "Product";
-        }
+
         /// <summary>
         /// Метод возвращает случайную стоимость товара, в зависимости от типа.
         /// </summary>
@@ -104,9 +102,9 @@ namespace GaidukovPSBstudyBasket
         {
             return Type switch
             {
-                type.washingMachine => (1 + random.NextDouble())*10000,
-                type.fan => (1 + random.NextDouble())*500,
-                type.microwave => (1 + random.NextDouble())*3000
+                type.washingMachine => (1 + random.NextDouble()) * 10000,
+                type.fan => (1 + random.NextDouble()) * 500,
+                type.microwave => (1 + random.NextDouble()) * 3000
             };
         }
 
@@ -128,7 +126,7 @@ namespace GaidukovPSBstudyBasket
         {
             return Type switch
             {
-                type.washingMachine => random.Next(30, 61) ,
+                type.washingMachine => random.Next(30, 61),
                 type.fan => 0.1 + random.NextDouble(),
                 type.microwave => random.Next(3, 5) + random.NextDouble()
             };
@@ -151,7 +149,7 @@ namespace GaidukovPSBstudyBasket
         {
             if (random.Next(0, 2) == 0)
                 return "yes";
-            else 
+            else
                 return "no";
         }
 
@@ -162,9 +160,9 @@ namespace GaidukovPSBstudyBasket
         /// <returns></returns>
         public string GetSpecialFeatureByType(string ProductType)
         {
-            string feature = null; 
+            string feature = null;
 
-            switch(ProductType)
+            switch (ProductType)
             {
                 case "Стиральная машина":
                     feature = "Сушилка";
@@ -172,14 +170,14 @@ namespace GaidukovPSBstudyBasket
 
                 case "Фен":
                     feature = "Турборежим";
-                    break; 
+                    break;
 
                 case "Микроволновая печь":
                     feature = "Режим разморозки";
-                    break; 
+                    break;
 
-                default: 
-                    feature = "Какая-то ерунда";
+                default:
+                    feature = "#####";
                     break;
             };
 
@@ -195,7 +193,7 @@ namespace GaidukovPSBstudyBasket
             ProductsDataBase.Fans.Clear();
             ProductsDataBase.Microwaves.Clear();
 
-            for (int i = 0; i<NumberOfGeneratedProducts; i++)
+            for (int i = 0; i < NumberOfGeneratedProducts; i++)
             {
                 ProductsDataBase.WashingMachines.Add(GetRandomProduct(type.washingMachine));
                 ProductsDataBase.Fans.Add(GetRandomProduct(type.fan));
@@ -214,28 +212,28 @@ namespace GaidukovPSBstudyBasket
         {
             string fileName = "WashingMachines.json";
             string jsonString = JsonSerializer.Serialize(ProductsDataBase.WashingMachines);
-            File.WriteAllText(fileName, jsonString);            
+            File.WriteAllText(fileName, jsonString);
         }
 
         void SerializeFans()
         {
             string fileName = "Fans.json";
             string jsonString = JsonSerializer.Serialize(ProductsDataBase.Fans);
-            File.WriteAllText(fileName, jsonString);            
+            File.WriteAllText(fileName, jsonString);
         }
 
         void SerializeMicrowaves()
         {
             string fileName = "Microwaves.json";
             string jsonString = JsonSerializer.Serialize(ProductsDataBase.Microwaves);
-            File.WriteAllText(fileName, jsonString);            
+            File.WriteAllText(fileName, jsonString);
         }
 
         public void SerializeOrder(List<ProductsModel> Basket, int orderNumber)
         {
             string fileName = OrderGenerator.path + "order_" + orderNumber.ToString() + ".json";
             string jsonString = JsonSerializer.Serialize(Basket);
-            File.WriteAllText(fileName, jsonString);            
+            File.WriteAllText(fileName, jsonString);
         }
     }
 }

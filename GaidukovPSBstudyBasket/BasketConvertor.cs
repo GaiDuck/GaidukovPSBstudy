@@ -1,7 +1,10 @@
-﻿using GaidukovPSBstudyCalculator;
+﻿using GaidukovPSBstudyBasket.Generator;
+using GaidukovPSBstudyBasket.Models;
+using GaidukovPSBstudyCalculator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -10,7 +13,7 @@ namespace GaidukovPSBstudyBasket
 {
     internal class BasketConvertor
     {
-        ProductsGenerator generator = new ProductsGenerator(); // если статика - убрать вообще, если динамика - прокидывать через конструктор
+        ProductsGenerator generator = new ProductsGenerator();
 
         List<string> category = new List<string>();
         public List<ProductsModel> UsersBasket = new List<ProductsModel>();

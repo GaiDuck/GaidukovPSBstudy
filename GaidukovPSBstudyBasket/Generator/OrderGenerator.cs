@@ -1,4 +1,5 @@
-﻿using GaidukovPSBstudyCalculator;
+﻿using GaidukovPSBstudyBasket.Models;
+using GaidukovPSBstudyCalculator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using C = GaidukovPSBstudyCalculator.Constants; // пример ссылок на статические классы
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.Generator
 {
     internal class OrderGenerator
     {
-        ProductsGenerator generator = new ProductsGenerator(); //?? класс станет абстрактным, или обратиться к статическому? - не понял, что здесь надо сделать статическим или абстрактным и зачем
+        ProductsGenerator generator = new ProductsGenerator();
         BasketConvertor basket = new BasketConvertor();
         private static Random random = new Random();
 
@@ -32,8 +33,6 @@ namespace GaidukovPSBstudyBasket
         string fileName;
         string jsonString;
 
-        //Это, конечно, костыльное решение, но оно необходимо, чтобы проверять, если ли в папке файл заказа с определенным номером. 
-        //Я хочу использовать это для того, чтобы не приходилось угадывать, какие файлы уже созданы, а читать из списка существующих, и чтобы вновь создаваемые файлы не перезаписывали старые. 
         public static string path = @"C:\Users\alexg\OneDrive\Рабочий стол\GaidukovPSBstudyCalculator-08b48238f18b7f9e03efc951a4fc3d611d2aca50\GaidukovPSBstudyCalculator\GaidukovPSBstudyBasket\Orders\";
 
         ILogger Logger { get; set; }
@@ -76,7 +75,7 @@ namespace GaidukovPSBstudyBasket
         {
             do
             {
-                do 
+                do
                 {
                     Logger.SendMessage("\nВыберите интересующую вас категорию товаров:" +
                                        "\n1 - стиральные машины " +
@@ -87,7 +86,6 @@ namespace GaidukovPSBstudyBasket
                 }
                 while (ProductList == null);
 
-                //productsOnScreenNumber = GetNumberOfProductsOnScreen();
                 basket.SellSortedCategoryList(basket.GetSortedProductList(ProductList, basket.GetSortingParametr()), GetNumberOfProductsOnScreen());
 
                 Logger.SendMessage("\nВведите артикул желаемого товара." +
@@ -304,7 +302,6 @@ namespace GaidukovPSBstudyBasket
                 RelevantShopAssortmentList.AddRange(GetProductsCategory(i.ToString()).Where(s => s.Cost <= maxSumm));
             }
 
-            //Удалить потом эту строку, чтобы не засоряла консоль.
             Logger.SendMessage($"\nНайденно удовлетворяющих требованиям продуктов: {RelevantShopAssortmentList.Count}\n");
         }
 
@@ -328,7 +325,6 @@ namespace GaidukovPSBstudyBasket
 
             while (File.Exists(path + "order_" + OrderNumber.ToString() + ".json"))
             {
-                //logger.SendMessage("Заказ с таким номером уже существует");
                 OrderNumber++;
             }
 
@@ -346,7 +342,6 @@ namespace GaidukovPSBstudyBasket
 
             while (File.Exists(path + "order_" + OrderNumber.ToString() + ".json"))
             {
-                //logger.SendMessage("Заказ с таким номером уже существует");
                 OrderNumber++;
             }
 
@@ -560,12 +555,12 @@ namespace GaidukovPSBstudyBasket
 
         public List<int> SeachForOrders()
         {
-            List<int> OrderNumbers = new List<int>();          
+            List<int> OrderNumbers = new List<int>();
             int fileQuantity = Directory.GetFiles(path).Length;
 
             int i = 0;
 
-            while (fileQuantity > 0) 
+            while (fileQuantity > 0)
             {
                 if (File.Exists($"{path}order_{i}.json"))
                 {

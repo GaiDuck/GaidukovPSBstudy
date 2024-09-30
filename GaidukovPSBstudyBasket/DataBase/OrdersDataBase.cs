@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GaidukovPSBstudyBasket.Models;
 
-namespace GaidukovPSBstudyBasket
+namespace GaidukovPSBstudyBasket.DataBase
 {
     static class OrdersDataBase
     {
