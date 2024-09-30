@@ -80,20 +80,23 @@ namespace GaidukovPSBstudyBasket
         /// <param name="userInput"></param>
         public void GetBasket(List<ProductsModel> Produckts, List<ProductsModel> Basket, string userInput)
         {
-            int BasketCount = Basket.Count;
-
-            foreach (ProductsModel product in Produckts)
+            if (userInput != "")
             {
-                if (product.Article == userInput)
+                int BasketCount = Basket.Count;
+
+                foreach (ProductsModel product in Produckts)
                 {
-                    Basket.Add(product);
-                    Logger.SendMessage("\nТовар успешно добавлен в корзину.\n");
+                    if (product.Article == userInput)
+                    {
+                        Basket.Add(product);
+                        Logger.SendMessage("\nТовар успешно добавлен в корзину.\n");
+                    }
                 }
-            }
 
-            if (Basket.Count <= BasketCount)
-            {
-                Logger.SendMessage("\nТакого товара нет.\n");
+                if (Basket.Count <= BasketCount)
+                {
+                    Logger.SendMessage("\nТакого товара нет.\n");
+                }
             }
         }
 
@@ -111,7 +114,7 @@ namespace GaidukovPSBstudyBasket
 
             bool parced = int.TryParse(Logger.ReadMessage(), out int sortingPatternNumber);
 
-            if (!parced)
+            if (!parced || sortingPatternNumber > 5)
             {
                 Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");

@@ -3,6 +3,21 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Channels;
+
+
+
+/*
+Console.WriteLine(ReadDigitsOnly());
+
+string ReadDigitsOnly()
+{
+    string input = Console.ReadLine();
+    input = Regex.Replace(input, @"[^\d]", "");
+    return input;
+}
+
+*/
 
 /*
 List<int> nums1 = new List<int>() { 1, 2, 3, 4 };

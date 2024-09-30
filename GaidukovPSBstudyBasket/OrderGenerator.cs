@@ -54,16 +54,19 @@ namespace GaidukovPSBstudyBasket
             {
                 AddProductToOrder(basket.UsersBasket);
 
-                Logger.SendMessage("\nКорзина:");
-                basket.SellSortedCategoryList(basket.GetSortedProductList(basket.UsersBasket, basket.GetSortingParametr()), basket.UsersBasket.Count());
+                if (basket.UsersBasket.Count > 0)
+                {
+                    Logger.SendMessage("\nКорзина:");
+                    basket.SellSortedCategoryList(basket.GetSortedProductList(basket.UsersBasket, basket.GetSortingParametr()), basket.UsersBasket.Count());
 
-                Logger.SendMessage("\nСохранить заказ?" +
+                    Logger.SendMessage("\nСохранить заказ?" +
                    "\n1 - да" +
                    "\nEnter - нет");
 
-                if (Logger.ReadMessage() == "1")
-                {
-                    SaveOrder(basket.UsersBasket);
+                    if (Logger.ReadMessage() == "1")
+                    {
+                        SaveOrder(basket.UsersBasket);
+                    }
                 }
             }
             while (OneMoreOrder());
@@ -75,20 +78,20 @@ namespace GaidukovPSBstudyBasket
             {
                 do 
                 {
-                    Logger.SendMessage("Выберите интересующую вас категорию товаров:" +
+                    Logger.SendMessage("\nВыберите интересующую вас категорию товаров:" +
                                        "\n1 - стиральные машины " +
                                        "\n2 - фены " +
-                                       "\n3 - микроволновые печи " +
                                        "\n3 - микроволновые печи\n");
 
                     ProductList = GetProductsCategory(Logger.ReadMessage());
                 }
                 while (ProductList == null);
 
-                productsOnScreenNumber = GetNumberOfProductsOnScreen();
-                basket.SellSortedCategoryList(basket.GetSortedProductList(ProductList, basket.GetSortingParametr()), productsOnScreenNumber);
+                //productsOnScreenNumber = GetNumberOfProductsOnScreen();
+                basket.SellSortedCategoryList(basket.GetSortedProductList(ProductList, basket.GetSortingParametr()), GetNumberOfProductsOnScreen());
 
-                Logger.SendMessage("\nВведите артикул желаемого товара.\n");
+                Logger.SendMessage("\nВведите артикул желаемого товара." +
+                                   "\nИли нажмите Enter, если не один из товаров вам не нравится.");
 
                 basket.GetBasket(ProductList, Basket, Logger.ReadMessage());
 
@@ -130,6 +133,7 @@ namespace GaidukovPSBstudyBasket
 
                 default:
                     Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                    ProductrsCategory = null;
                     break;
             }
 
@@ -141,10 +145,11 @@ namespace GaidukovPSBstudyBasket
             Logger.SendMessage("\nСколько товаров категории отобразить?\n");
             bool parced = int.TryParse(Logger.ReadMessage(), out int productsOnScreen);
 
-            if (!parced || productsOnScreen > 10)
+            if (!parced || productsOnScreen < 1 || productsOnScreen > 10)
             {
                 Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Logger.SendMessage("Выбрано значение по умолчанию: 3.");
+                productsOnScreenNumber = 3;
             }
             else
                 productsOnScreenNumber = productsOnScreen;
@@ -337,6 +342,7 @@ namespace GaidukovPSBstudyBasket
 
         public void SaveOrder(List<ProductsModel> UsersBasket, int orderNumber)
         {
+            OrderNumber = orderNumber;
 
             while (File.Exists(path + "order_" + OrderNumber.ToString() + ".json"))
             {
@@ -554,19 +560,19 @@ namespace GaidukovPSBstudyBasket
 
         public List<int> SeachForOrders()
         {
-            List<int> OrderNumbers = new List<int>();
+            List<int> OrderNumbers = new List<int>();          
+            int fileQuantity = Directory.GetFiles(path).Length;
 
-            string[] OrderNums = Directory.GetFiles(path);
+            int i = 0;
 
-            foreach (string num in OrderNums)
+            while (fileQuantity > 0) 
             {
-                string[] s = Regex.Split(num, @"[^\d]");
-                foreach (string s2 in s)
+                if (File.Exists($"{path}order_{i}.json"))
                 {
-                    Logger.SendMessage($"{num}");
+                    OrderNumbers.Add(i);
+                    fileQuantity--;
                 }
-
-                //OrderNumbers.Add(int.Parse(s));
+                i++;
             }
 
             return OrderNumbers;

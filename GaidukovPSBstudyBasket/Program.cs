@@ -21,10 +21,12 @@ internal class Program
         pg.GetRandomProduct(type.fan);
 */
 
-        ConsoleLogger logger = new ConsoleLogger(); //убрать дубли классов Logger, ConsoleLogger и привести всё к одному классу и интерфейсу ILogger
+        ConsoleLogger logger = new ConsoleLogger(); 
         ProductsGenerator generator = new ProductsGenerator();
         OrderGenerator order = new OrderGenerator();
         OrderCardsGenerator orderCards = new OrderCardsGenerator();
+
+        List <OrderCardModel> OutputOrdersList = new List <OrderCardModel>();
 
         bool exit;
 
@@ -42,10 +44,10 @@ internal class Program
                                "\n3 - Создать случайно сгенерированнный по пожеланиям клиента заказ" +
                                "\n4 - Прочитать заказ;" +
                                "\n5 - Редактировать заказ," +
-                               "\n6 - Вывести часть заказов (LINQ).");
+                               "\n6 - Вывести часть заказов (LINQ).\n");
 
 
-            switch (logger.ReadMessage())
+            switch (logger.ReadDigitsOnly())
             {
                 case "1":
                     order.CreateUserOrder(); //Заказ, создаваемый пользователем вручную.
@@ -62,14 +64,14 @@ internal class Program
                                        "\n2 - С самой высокой оценкой;" +
                                        "\n3 - С самой быстрой доставкой.");
 
-                    switch (logger.ReadMessage())
+                    switch (logger.ReadDigitsOnly())
                     {
                         case "1":
                             mod = "cheap";
                             break;
                         case "2":
                             mod = "qualitative";
-;                            break;
+                            ; break;
 
                         case "3":
                             mod = "fast delivery";
@@ -79,7 +81,7 @@ internal class Program
                             logger.SendMessage("Выбран режим по-умолчанию: создание случайного заказа.");
                             break;
                     }
-                                        
+
                     if (mod == null)
                         order.CreateRandomOrder();
                     else
@@ -95,36 +97,68 @@ internal class Program
                     break;
 
                 case "6":
-                    orderCards.GetOrderCardsList();
-                    logger.SendMessage("\nПо какому критерию вывести заказы?" +
-                                       "\n1 - дешевле заданной стоимости," +
-                                       "\n2 - дороже заданной стоимости," +
-                                       "\n3 - отсортированные по весу," +
-                                       "\n4 - по времени доставки.");
-                    switch (logger.ReadMessage())
+                    do
                     {
-                        case "1":
-                            logger.SendMessage("Введите максимальную стоимость: ");
-                            orderCards.GetOrdersChiapperThan(double.Parse(logger.ReadMessage()));
-                            break;
+                        exit = false;
 
-                        case "2":
-                            logger.SendMessage("Введите минимальную стоимость: ");
-                            orderCards.GetOrdersMoreExpensiveThan(double.Parse(logger.ReadMessage()));
-                            break;
+                        orderCards.GetOrderCardsList();
 
-                        case "3":
-                            orderCards.GetOrdersSortedByWeight();
-                            break;
+                        OutputOrdersList.Clear();
 
-                        case "4":
-                            logger.SendMessage("Введите максимальное время доставки: ");
-                            orderCards.GetOrdersByDeliveringDate(int.Parse(logger.ReadMessage()));
-                            break;
+                        logger.SendMessage("\nПо какому критерию вывести заказы?" +
+                                           "\n1 - дешевле заданной стоимости," +
+                                           "\n2 - дороже заданной стоимости," +
+                                           "\n3 - отсортированные по весу," +
+                                           "\n4 - по времени доставки.");
 
-                        default:
-                            break;
+                        switch (logger.ReadDigitsOnly())
+                        {
+                            case "1":
+                                logger.SendMessage("Введите максимальную стоимость: ");
+                                OutputOrdersList.AddRange(
+                                    orderCards.GetOrdersChiapperThan(double.Parse(logger.ReadDigitsOnly())));
+                                exit = true;
+                                break;
+
+                            case "2":
+                                logger.SendMessage("Введите минимальную стоимость: ");
+                                OutputOrdersList.AddRange(
+                                    orderCards.GetOrdersMoreExpensiveThan(double.Parse(logger.ReadDigitsOnly())));
+                                exit = true;
+                                break;
+
+                            case "3":
+                                OutputOrdersList.AddRange(
+                                    orderCards.GetOrdersSortedByWeight());
+                                exit = true;
+                                break;
+
+                            case "4":
+                                logger.SendMessage("Введите максимальное время доставки: ");
+                                OutputOrdersList.AddRange(
+                                    orderCards.GetOrdersByDeliveringDate(int.Parse(logger.ReadDigitsOnly())));
+                                exit = true;
+                                break;
+
+                            default:
+                                logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                                logger.SendMessage("\nЖелаете попробовать повторно?" +
+                                                   "\n1 - да" +
+                                                   "\nEnter - нет\n");
+
+                                if(logger.ReadMessage() != "1")
+                                    exit = true;
+                                break;
+                            }
+
+                    } 
+                    while (!exit);
+                    
+                    foreach (var orderCard in OutputOrdersList)
+                    {
+                        logger.SendMessage($"{orderCard.Article}");
                     }
+
                     break;
 
                 default:

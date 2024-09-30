@@ -38,5 +38,10 @@ namespace GaidukovPSBstudyCalculator
         {
             throw new NotImplementedException();
         }
+
+        public string ReadDigitsOnly()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

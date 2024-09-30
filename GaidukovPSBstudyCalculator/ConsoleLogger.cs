@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GaidukovPSBstudyCalculator
@@ -39,6 +40,18 @@ namespace GaidukovPSBstudyCalculator
             string message = LoggerMessage(m) + str;
             Console.Write(message);
         }
-    }
 
+        public string ReadDigitsOnly()
+        {
+            string input = Regex.Replace(Console.ReadLine(), @"[^\d]", "");
+            
+            if (input != "")
+            {
+                return input;
+            }
+
+            Console.WriteLine("Выбранно значение по умолчанию: 1");
+            return "1";
+        }
+    }
 }

@@ -14,5 +14,6 @@ namespace GaidukovPSBstudyCalculator
         void LogResult(LogMessage m, double result);
         void LogString(LogMessage m, string str);
         string ReadMessage();
+        string ReadDigitsOnly();
     }
 }
