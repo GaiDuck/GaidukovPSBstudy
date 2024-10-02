@@ -14,6 +14,11 @@ namespace GaidukovPSBstudyCalculator
             return Console.ReadLine();
         }
 
+        public string ReadMessage(string input)
+        {
+            return input;
+        }
+
         public void LogMathOperation(double firstNumber, double secondNumber, char mathOperator, double tempResult)
         {
             string message = $"{Math.Round(firstNumber, 4)} {mathOperator} {Math.Round(secondNumber, 4)} = {Math.Round(tempResult, 4)}";

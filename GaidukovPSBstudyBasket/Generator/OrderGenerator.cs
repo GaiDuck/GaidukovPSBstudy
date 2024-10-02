@@ -369,6 +369,27 @@ namespace GaidukovPSBstudyBasket.Generator
             return makeOneMoreOrder;
         }
 
+        /// <summary>
+        /// Метод создан для того, чтобы можно было протестировать метод OneMoreOrder().
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public bool OneMoreOrderForTest(string str)
+        {
+            bool makeOneMoreOrder = true;
+
+            Logger.SendMessage("\nХотите сделать еще один заказ?" +
+                               "\n1 - да" +
+                               "\nEnter - нет");
+
+            if (Logger.ReadMessage(str) != "1")
+            {
+                makeOneMoreOrder = false;
+            }
+
+            return makeOneMoreOrder;
+        }
+
         public void ReadOrder(List<int> OrderNumbers)
         {
             EnumerateOrders(OrderNumbers);
@@ -554,6 +575,26 @@ namespace GaidukovPSBstudyBasket.Generator
         }
 
         public List<int> SeachForOrders()
+        {
+            List<int> OrderNumbers = new List<int>();
+            int fileQuantity = Directory.GetFiles(path).Length;
+
+            int i = 0;
+
+            while (fileQuantity > 0)
+            {
+                if (File.Exists($"{path}order_{i}.json"))
+                {
+                    OrderNumbers.Add(i);
+                    fileQuantity--;
+                }
+                i++;
+            }
+
+            return OrderNumbers;
+        }
+
+        public List<int> SeachForOrdersForTest(string path)
         {
             List<int> OrderNumbers = new List<int>();
             int fileQuantity = Directory.GetFiles(path).Length;

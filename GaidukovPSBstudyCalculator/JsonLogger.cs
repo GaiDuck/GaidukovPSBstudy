@@ -43,5 +43,10 @@ namespace GaidukovPSBstudyCalculator
         {
             throw new NotImplementedException();
         }
+
+        public string ReadMessage(string input)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

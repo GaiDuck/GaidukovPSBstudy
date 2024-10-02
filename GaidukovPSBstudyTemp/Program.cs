@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Channels;
 
 
-
 /*
 Console.WriteLine(ReadDigitsOnly());
 

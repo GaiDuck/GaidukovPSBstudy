@@ -60,6 +60,11 @@ namespace GaidukovPSBstudyBasket
                 case 5:
                     product = Produckts.OrderBy(s => s.DeliveryDays).ToList();
                     break;
+
+                default:
+                    product = Produckts.OrderBy(s => s.Article).ToList();
+                    break;
+
             }
             return product;
         }
@@ -121,6 +126,28 @@ namespace GaidukovPSBstudyBasket
             {
                 Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
                 Logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
+                sortingPatternNumber = 1;
+            }
+            return sortingPatternNumber;
+        }
+        
+        public int GetSortingParametrForTest(string str)
+        {
+            Logger.SendMessage("\nОпределите параметр сортировки:\n" +
+                               "1 - сортировка по названию,\n" +
+                               "2 - сортировка по стоимости,\n" +
+                               "3 - сортировка по оценке,\n" +
+                               "4 - сортировка по весу,\n" +
+                               "5 - сортировка по времени доставки.\n");
+
+            bool parced = int.TryParse(Logger.ReadMessage(str), out int sortingPatternNumber);
+
+            if (!parced || sortingPatternNumber > 5)
+            {
+/*
+                Logger.SendMessage(LogMessage.EnterIncorrectDataMessage);
+                Logger.SendMessage("Выбрано значение по умолчанию: сортировка по названию.");
+*/
                 sortingPatternNumber = 1;
             }
             return sortingPatternNumber;
