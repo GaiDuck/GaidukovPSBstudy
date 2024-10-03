@@ -49,18 +49,21 @@ namespace GaidukovPSBstudyTests
         public void GetWashingMachinesAssortmentTest()
         {
             Assert.That(ProductsDataBase.WashingMachines.Count, Is.EqualTo(ProductsGenerator.NumberOfGeneratedProducts));
+            Assert.That(ProductsDataBase.WashingMachines.All(WM => WM.ProductType == "Стиральная машина"));
         }
 
         [Test]
         public void GetFansAssortmentTest()
         {
             Assert.That(ProductsDataBase.Fans.Count, Is.EqualTo(ProductsGenerator.NumberOfGeneratedProducts));
+            Assert.That(ProductsDataBase.Fans.All(f => f.ProductType == "Фен"));
         }
 
         [Test]
         public void GetMicrowavesAssortmentTest()
         {
             Assert.That(ProductsDataBase.Microwaves.Count, Is.EqualTo(ProductsGenerator.NumberOfGeneratedProducts));
+            Assert.That(ProductsDataBase.Microwaves.All(m => m.ProductType == "Микроволновая печь"));
         }
 
         //OrderGeneratorTests
@@ -72,13 +75,13 @@ namespace GaidukovPSBstudyTests
         [TestCase ("", false)]
         public void OneMoreOrderTest(string str, bool makeOneMoreOrder)
         {
-            Assert.That(order.OneMoreOrderForTest(str), Is.EqualTo(makeOneMoreOrder));
+            Assert.That(order.OneMoreOrder(str), Is.EqualTo(makeOneMoreOrder));
         }
 
         [Test]
         public void SeachForOrdersTest()
         {
-            Assert.That(order.SeachForOrdersForTest(testPath), Is.EqualTo(numbers));
+            Assert.That(order.SeachForOrders(testPath), Is.EqualTo(numbers));
         }
 
         //BasketConverter
@@ -93,7 +96,7 @@ namespace GaidukovPSBstudyTests
         [TestCase ("", 1)]
         public void GetSortingParametrTest(string str, int expectedResult)
         {
-            Assert.That(basket.GetSortingParametrForTest(str), Is.EqualTo(expectedResult));
+            Assert.That(basket.GetSortingParametr(str), Is.EqualTo(expectedResult));
         }
 
         [TestCase(1)]
@@ -104,7 +107,7 @@ namespace GaidukovPSBstudyTests
         [TestCase(6)]
         [TestCase(10)]
         [TestCase(50)]
-        public void GetSortedProductListTest(int sortingPattern)
+        public void GetSortedProductListTest(int sortingPattern) //стделать enumдз0------
         {
             sortedProducts.Clear();
             testPassed = true;

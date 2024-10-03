@@ -5,6 +5,10 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Channels;
 
+static void Main()
+{
+
+}
 
 /*
 Console.WriteLine(ReadDigitsOnly());

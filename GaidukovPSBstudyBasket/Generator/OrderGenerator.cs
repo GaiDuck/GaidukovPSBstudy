@@ -16,6 +16,7 @@ namespace GaidukovPSBstudyBasket.Generator
     {
         ProductsGenerator generator = new ProductsGenerator();
         BasketConvertor basket = new BasketConvertor();
+
         private static Random random = new Random();
 
         List<ProductsModel> ProductList = new List<ProductsModel>();
@@ -98,7 +99,19 @@ namespace GaidukovPSBstudyBasket.Generator
                                    "\nДля завершения нажмите 1.\n");
 
                 if (Logger.ReadMessage() == "1")
+                {
+                    //вот сюда воткнуть метод, возвращающий суммарный заказ. 
+                    //только надо переписать метод таким образом, что он принимает не номер заказа, а список продуктов.
+                    OrderCardsGenerator orderCard = new OrderCardsGenerator();
+                    OrderCardModel currentOrder = orderCard.GetOrderCard(Basket);
+                    Logger.SendMessage($"\nОбщие параметры текущего заказа:\n" +
+                                       $"\nОбщая стоимость: {currentOrder.TotalCost}" +
+                                       $"\nСредняя оценка: {currentOrder.AverageScore}" +
+                                       $"\nОбщий вес: {currentOrder.TotalWeight}" +
+                                       $"\nВремя доставки: {currentOrder.DeliveryDays}д.\n");
+
                     exit = true;
+                }
                 else
                     exit = false;
             }
@@ -124,7 +137,7 @@ namespace GaidukovPSBstudyBasket.Generator
                     break;
 
                 case "3":
-                    fileName = "Fans.json";
+                    fileName = "Microwaves.json";
                     jsonString = File.ReadAllText(fileName);
                     ProductrsCategory = JsonSerializer.Deserialize<List<ProductsModel>>(jsonString);
                     break;
@@ -372,9 +385,9 @@ namespace GaidukovPSBstudyBasket.Generator
         /// <summary>
         /// Метод создан для того, чтобы можно было протестировать метод OneMoreOrder().
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="str"> текст, который обычно получается из консоли </param>
         /// <returns></returns>
-        public bool OneMoreOrderForTest(string str)
+        public bool OneMoreOrder(string str)
         {
             bool makeOneMoreOrder = true;
 
@@ -594,7 +607,7 @@ namespace GaidukovPSBstudyBasket.Generator
             return OrderNumbers;
         }
 
-        public List<int> SeachForOrdersForTest(string path)
+        public List<int> SeachForOrders(string path)
         {
             List<int> OrderNumbers = new List<int>();
             int fileQuantity = Directory.GetFiles(path).Length;

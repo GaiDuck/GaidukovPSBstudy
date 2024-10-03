@@ -45,6 +45,18 @@ namespace GaidukovPSBstudyBasket.Generator
             return OrderCard;
         }
 
+        public OrderCardModel GetOrderCard(List<ProductsModel> tempOrder)
+        {
+            OrderCardModel OrderCard = new OrderCardModel();
+
+            OrderCard.TotalCost = GetTotalCost(tempOrder);
+            OrderCard.AverageScore = GetAverageScore(tempOrder);
+            OrderCard.TotalWeight = GetTotalWeight(tempOrder);
+            OrderCard.DeliveryDays = GetDeliveryDays(tempOrder);
+
+            return OrderCard;
+        }
+
         double GetTotalCost(List<ProductsModel> order)
         {
             double totalCost = 0;

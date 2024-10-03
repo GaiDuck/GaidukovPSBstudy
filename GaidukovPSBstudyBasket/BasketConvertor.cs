@@ -35,14 +35,15 @@ namespace GaidukovPSBstudyBasket
         /// метод принимает список продуктов одной категории и параметр, покотому сортируется товар, затем сортирует товары в соответствии с параметром. 
         /// </summary>
         /// <param name="Produckts"></param>
-        public List<ProductsModel> GetSortedProductList(List<ProductsModel> Produckts, int sortingPattern)
+        public List<ProductsModel> GetSortedProductList(List<ProductsModel> Produckts, int sortingPattern) //сделать sortingParametr enum-ом 
         {
             List <ProductsModel> product = new List <ProductsModel>();
             
             switch (sortingPattern)
             {
                 case 1:
-                    product = Produckts.OrderBy(s => s.Article).ToList();
+                    product = BubbleSorting(Produckts);
+                    //product = Produckts.OrderBy(s => s.Article).ToList();
                     break;
 
                 case 2:
@@ -67,6 +68,23 @@ namespace GaidukovPSBstudyBasket
 
             }
             return product;
+        }
+
+        List<ProductsModel> BubbleSorting(List<ProductsModel> Produckts)
+        {
+            for (int i = 0; i < Produckts.Count; i++)
+            {
+                for (int j = 0; j < Produckts.Count; j++)
+                {
+                    if (string.Compare(Produckts[i].Article, Produckts[j].Article) < 0)
+                    {
+                        var temp = Produckts[j];
+                        Produckts[j] = Produckts[i];
+                        Produckts[i] = temp;
+                    }
+                }
+            }
+            return Produckts;
         }
 
         /// <summary>
@@ -131,7 +149,7 @@ namespace GaidukovPSBstudyBasket
             return sortingPatternNumber;
         }
         
-        public int GetSortingParametrForTest(string str)
+        public int GetSortingParametr(string str)
         {
             Logger.SendMessage("\nОпределите параметр сортировки:\n" +
                                "1 - сортировка по названию,\n" +
